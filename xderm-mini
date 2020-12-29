@@ -150,6 +150,9 @@ pass=$(grep pass /root/config.txt|awk -F "=" '{print $2}')
 #########################
 flush;injek
 echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Menjalankan Badvpn-tun2socks....";sleep 1
+  if [ -f $(iptables -t nat  -L|grep MASQ|grep tcp|awk '{print $1}') ]; then
+iptables -A POSTROUTING --proto tcp -t nat -o tun0 -j MASQUERADE
+  fi
 screen -d -m badvpn-tun2socks --tundev tun0 --netif-ipaddr 10.0.0.2 --netif-netmask 255.255.255.0 --socks-server-addr 127.0.0.1:1080 --loglevel 0
 ifconfig tun0 10.0.0.1 netmask 255.255.255.0
 echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Routing host SSH, IP Gateway dan dns..";sleep 1
