@@ -1,5 +1,5 @@
-host=139.59.112.65
-port=444
-user=bestvpnssh-ryanganteng1
-pass=123q
-sni=explor.zoom.us
+host=139.59.xx.xx
+port=4xx
+user=xxxxx-ryanganteng1
+pass=1xxx
+sni=xnxx.com
