@@ -2,7 +2,7 @@
 #xderm_mini
 clear
  injek () {
-sni=$(grep sni config.txt|awk -F "=" '{print $2}')
+sni=$(grep sni /root/config.txt|awk -F "=" '{print $2}')
 echo "#!/usr/bin/python
 import re
 import ssl
@@ -140,13 +140,13 @@ echo -e "\e[31;1m Setup Selesai.\e[0m\n"
 }
  start () {
 #########################
-host=$(grep host config.txt|awk -F "=" '{print $2}')
+host=$(grep host /root/config.txt|awk -F "=" '{print $2}')
  if [ -f $host ]; then
 echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Config belom disetting !!\n";sleep 1;exit
  fi
-port=$(grep port config.txt|awk -F "=" '{print $2}')
-user=$(grep user config.txt|awk -F "=" '{print $2}')
-pass=$(grep pass config.txt|awk -F "=" '{print $2}')
+port=$(grep port /root/config.txt|awk -F "=" '{print $2}')
+user=$(grep user /root/config.txt|awk -F "=" '{print $2}')
+pass=$(grep pass /root/config.txt|awk -F "=" '{print $2}')
 #########################
 flush;injek
 echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Menjalankan Badvpn-tun2socks....";sleep 1
