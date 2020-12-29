@@ -2,6 +2,7 @@
 for profesional tool script armbian stb
 
 dibutuhkan: python3
+gunakan koneksi internet stabil untuk instalasi agar tidak ada error.
 
 # Cara Install
 wget -O /usr/bin/xderm-mini https://raw.githubusercontent.com/ryanfauzi1/xderm-mini/main/xderm-mini && chmod +x /usr/bin/xderm-mini && xderm-mini setup
