@@ -11,10 +11,10 @@ setelah setup selesai, ketik xderm-mini untuk perintah yang lain.
 buat config file di directory root dengan nama config.txt
 isi seperti dibawah ini
 
-host=139.59.112.11
-port=444
+host=139.59.112.11\n
+port=444\n
 user=bestvpnssh-ryanganteng1
-pass=121123q
+pass=121123q\n
 sni=www.whatsapp.com
 
 Thanks.
