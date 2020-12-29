@@ -1,0 +1,208 @@
+#!/bin/bash
+#xderm_mini
+clear
+ injek () {
+sni=$(grep sni config.txt|awk -F "=" '{print $2}')
+echo "#!/usr/bin/python
+import re
+import ssl
+import time
+import json
+import random
+import select
+import datetime
+import socket
+import threading
+import os
+import sys
+
+class server_tunnel(threading.Thread):
+    def __init__(self, socket_accept, force_tunnel_type=None, external=False, quiet=False):
+        super(server_tunnel, self).__init__()
+
+        self.socket_client, (self.client_host, self.client_port) = socket_accept
+        self.force_tunnel_type = force_tunnel_type
+        self.external = external
+        self.quiet = quiet
+
+        self.server_name_indication = '$sni'
+        self.tunnel_type = ''
+        self.proxies = []
+        self.payload = ''
+        self.config = {}
+
+        self.do_handshake_on_connect = True
+        self.buffer_size = 65535
+        self.timeout = 3
+        self.daemon = True
+
+    def extract_client_request(self):
+        self.client_request = self.socket_client.recv(self.buffer_size).decode('charmap')
+        result = re.findall(r'(([a-zA-Z0-9]+(\.[a-zA-Z0-9]+)+):([0-9]+))', self.client_request)
+        result = result[0] if len(result) else ''
+        self.host, self.port = result[1], int(result[3])
+        return True
+
+    def handler(self):
+        sockets = [self.socket_tunnel, self.socket_client]
+        timeout = 0
+        self.socket_client.sendall(b'HTTP/1.0 200 Connection established\r\n\r\n')
+        while True:
+            timeout += 1
+            socket_io, _, errors = select.select(sockets, [], sockets, 3)
+            if errors: break
+            if socket_io:
+                for socket in socket_io:
+                    try:
+                        data = socket.recv(self.buffer_size)
+                        if not data: break
+                        if socket is self.socket_tunnel:
+                            self.socket_client.sendall(data)
+                        elif socket is self.socket_client:
+                            self.socket_tunnel.sendall(data)
+                        timeout = 0
+                    except: break
+            if timeout == 30: break
+
+    def konek(self):
+        try:
+            print('Soket disentuh oleh ' +self.host)
+            self.socket_tunnel.connect((self.host, int(self.port)))
+            self.socket_tunnel = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2).wrap_socket(self.socket_tunnel, server_hostname=self.server_name_indication, do_handshake_on_connect=self.do_handshake_on_connect)
+            self.handler()
+        except OSError:
+            print('Error: Connection closed.')
+        finally:
+            self.socket_tunnel.close()
+            self.socket_client.close()
+
+    def run(self):
+        self.socket_tunnel = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.socket_tunnel.settimeout(self.timeout)
+
+        if not self.extract_client_request():
+            self.socket_tunnel.close()
+            self.socket_client.close()
+            return
+        self.konek()
+
+class server(threading.Thread):
+    def __init__(self, inject_host_port, force_tunnel_type=None, external=False, quiet=False):
+        super(server, self).__init__()
+        self.inject_host, self.inject_port = self.inject_host_port = inject_host_port
+        self.socket_server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.socket_server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.force_tunnel_type = force_tunnel_type
+        self.external = external
+        self.quiet = quiet
+        self.daemon = True
+
+    def run(self):
+        try:
+            self.socket_server.bind(self.inject_host_port)
+            self.socket_server.listen(True)
+            while True:
+                try:
+                    server_tunnel(self.socket_server.accept(), self.force_tunnel_type, self.external, self.quiet).start()
+                except KeyboardInterrupt: pass
+        except OSError:
+            print('Inject not running!')
+
+def main():
+ print('Inject Started on 8789.')
+ server(('127.0.0.1', 8789), external=True, quiet=False).run()
+
+if __name__ == '__main__':
+    main()" > /tmp/xderm.py
+echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Menjalankan Inject..."
+screen -d -m python3 /tmp/xderm.py*;sleep 4;rm -rf /tmp/xderm.py*
+}
+ banner () {
+echo -e "\e[36;1m##############################################\e[0m"
+echo -e "           \e[35;1mXderm Mini SSH SSL 2021\e[0m\n\e[36;1m##############################################\e[0m\n"
+}
+ flush () {
+echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Membersihkan sisa sisa....";sleep 1
+killall -q sshpass openvpn autorekonek
+kill $(ps ax|grep python3|grep SCREEN|grep xderm.py|awk '{print $1}') 2>/dev/null
+kill $(ps ax|grep SCREEN|grep badvpn-tun2socks|awk "NR==1"|awk '{print $1}') 2>/dev/null
+}
+banner
+ setup () {
+echo -e "\e[36;3m Memperbarui Repository...\e[0m";sleep 1;apt update;sleep 2;clear
+banner;echo -e "\e[36;3m Menginstall Paket build dan Pendukung...\e[0m";sleep 1;apt install -y build-essential cmake git curl psmisc sshpass screen corkscrew;sleep 2;clear
+banner;echo -e "\e[36;3m Mengunduh Paket badvpn...\e[0m";sleep 1;rm -rf badvpn;git clone https://github.com/ambrop72/badvpn.git;cd badvpn;sleep 2;clear
+banner;echo -e "\e[36;3m Persiapan build....\e[0m";sleep 1;cmake . -DBUILD_NOTHING_BY_DEFAULT=1 -DBUILD_TUN2SOCKS=1;sleep 2;clear
+banner;echo -e "\e[36;3m Proses building.......\e[0m";sleep 1;make;sleep 2;clear
+banner;echo -e "\e[36;3m Memindahkan file paket ke sistem...\e[0m";sleep 1
+cp tun2socks/badvpn-tun2socks /usr/bin/;cd ..;rm -rf badvpn;sleep 2
+echo -e "\e[31;1m Setup Selesai.\e[0m\n"
+}
+ start () {
+#########################
+host=$(grep host config.txt|awk -F "=" '{print $2}')
+ if [ -f $host ]; then
+echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Config belom disetting !!\n";sleep 1;exit
+ fi
+port=$(grep port config.txt|awk -F "=" '{print $2}')
+user=$(grep user config.txt|awk -F "=" '{print $2}')
+pass=$(grep pass config.txt|awk -F "=" '{print $2}')
+#########################
+flush;injek
+echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Menjalankan Badvpn-tun2socks....";sleep 1
+screen -d -m badvpn-tun2socks --tundev tun0 --netif-ipaddr 10.0.0.2 --netif-netmask 255.255.255.0 --socks-server-addr 127.0.0.1:1080 --loglevel 0
+ifconfig tun0 10.0.0.1 netmask 255.255.255.0
+echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Routing host SSH, IP Gateway dan dns..";sleep 1
+route add $host dev usb0 2>/dev/null
+route add default gw 10.0.0.2 metric 6
+route add 8.8.8.8 dev usb0 2>/dev/null
+echo "##############################################"
+echo -e "  Host: $host\n  Port: $port\n  User: $user\n  Pass: ********\n##############################################"
+echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Menjalankan SSH (di latarbelakang)....";sleep 1
+
+screen -d -m sshpass -p "$pass" ssh -oServerAliveInterval=60 -oStrictHostKeyChecking=no -CND 127.0.0.1:1080 -p $port $user@$host -o "Proxycommand=corkscrew 127.0.0.1 8789 %h %p"
+echo -ne "\e[33;1m{$(date +%M:%S)}\e[0m Menguji Koneksi... ";n=1
+ while true; do
+r=$(curl -m3 www.google.com -w "%{http_code}\n" --proxy socks://127.0.0.1:1080 -s -o /dev/null)
+  if [ $r -eq 200 ]; then
+  echo -e "\e[32;1mHTTP/1.1 $r OK\e[0m";break
+  fi
+   if [ $n -eq 12 ]; then
+    echo -e "\e[31;1mNot Connect!\e[0m";flush;echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Berhenti.\n";exit
+   fi
+((n++));sleep 1
+done
+echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Menjalankan rekonek otomatis...";sleep 1
+echo "#!/bin/bash
+while true; do
+r=\$(curl -m3 www.google.com -w \"%{http_code}\" --proxy socks://127.0.0.1:1080 -s -o /dev/null);sleep 2
+ if [ \$r != 200 ]; then
+r=\$(curl -m3 www.google.com -w \"%{http_code}\" --proxy socks://127.0.0.1:1080 -s -o /dev/null)
+ fi
+  if [ \$r != 200 ]; then
+echo \"rekonek...\"
+killall -q sshpass
+screen -d -m sshpass -p \"$pass\" ssh -oServerAliveInterval=60 -oStrictHostKeyChecking=no -CND 127.0.0.1:1080 -p $port $user@$host -o \"Proxycommand=corkscrew 127.0.0.1 8789 %h %p\";sleep 10
+  fi
+sleep 1
+done" > /tmp/autorekonek;cd /tmp;chmod +x autorekonek
+screen -d -m ./autorekonek;sleep 2;rm -rf autorekonek
+echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Selesai.\n"
+}
+case $1 in
+ "setup")
+ setup;exit
+;;
+ "start")
+ start;exit
+;;
+ "stop")
+ flush;echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Selesai.\n";exit
+;;
+esac
+echo -e "\e[38;3m xderm-mini setup\e[0m \e[34;1m(instalasi paket)\e[0m"
+echo -e "\e[38;3m xderm-mini start\e[0m \e[34;1m(memulai injek & tunneling)\e[0m"
+echo -e "\e[38;3m xderm-mini stop\e[0m \e[34;1m(stop proses aktif)\e[0m\n"
+echo -e "##############################################"
+echo -e "           \e[33;1mCurrent versi 4.0 Copyright ®2021"
+echo -e "           Openwrt Tunnel & Logika Bash Linux\e[0m\n"
