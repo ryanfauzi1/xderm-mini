@@ -129,7 +129,8 @@ kill $(ps ax|grep SCREEN|grep badvpn-tun2socks|awk "NR==1"|awk '{print $1}') 2>/
 }
 banner
  setup () {
-echo -e "\e[36;3m Memperbarui Repository...\e[0m";sleep 1;apt update;sleep 2;clear
+echo -ne "\e[36;3m Uji koneksi internet... \e[0m";sleep 1;curl -s google.com &>/dev/null && echo "OK";sleep 2;clear || echo -e "tidak ada koneksi!\n";exit
+banner;echo -e "\e[36;3m Memperbarui Repository...\e[0m";sleep 1;apt update;sleep 2;clear
 banner;echo -e "\e[36;3m Menginstall Paket build dan Pendukung...\e[0m";sleep 1;apt install -y build-essential cmake git curl psmisc sshpass screen corkscrew;sleep 2;clear
 banner;echo -e "\e[36;3m Mengunduh Paket badvpn...\e[0m";sleep 1;rm -rf badvpn;git clone https://github.com/ambrop72/badvpn.git;cd badvpn;sleep 2;clear
 banner;echo -e "\e[36;3m Persiapan build....\e[0m";sleep 1;cmake . -DBUILD_NOTHING_BY_DEFAULT=1 -DBUILD_TUN2SOCKS=1;sleep 2;clear
