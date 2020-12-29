@@ -134,9 +134,9 @@ banner;echo -e "\e[36;3m Memperbarui Repository...\e[0m";sleep 1;apt update;slee
 banner;echo -e "\e[36;3m Menginstall Paket build dan Pendukung...\e[0m";sleep 1;apt install -y build-essential cmake git curl psmisc sshpass screen corkscrew;sleep 2;clear
 banner;echo -e "\e[36;3m Mengunduh Paket badvpn...\e[0m";sleep 1;rm -rf badvpn;git clone https://github.com/ambrop72/badvpn.git;cd badvpn;sleep 2;clear
 banner;echo -e "\e[36;3m Persiapan build....\e[0m";sleep 1;cmake . -DBUILD_NOTHING_BY_DEFAULT=1 -DBUILD_TUN2SOCKS=1;sleep 2;clear
-banner;echo -e "\e[36;3m Proses building.......\e[0m";sleep 1;make;sleep 2;clear
+banner;echo -e "\e[36;3m Proses building.......\e[0m";sleep 1;make;sleep 2;wget --no-check-certificate https://raw.githubusercontent.com/ryanfauzi1/xderm-mini/main/config.txt;clear
 banner;echo -e "\e[36;3m Memindahkan file paket ke sistem...\e[0m";sleep 1
-cp tun2socks/badvpn-tun2socks /usr/bin/;cd ..;rm -rf badvpn;sleep 2
+cp -f config.txt /root/config.txt 2>/dev/null;cp tun2socks/badvpn-tun2socks /usr/bin/;cd ..;rm -rf badvpn;sleep 2
 echo -e "\e[31;1m Setup Selesai.\e[0m\n"
 }
  start () {
