@@ -1,5 +1,5 @@
 host=139.59.xx.xx
 port=4xx
-user=xxxxx-ryanganteng1
+user=uxxx
 pass=1xxx
 sni=xnxx.com
