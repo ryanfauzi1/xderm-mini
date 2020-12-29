@@ -158,15 +158,15 @@ iptables -A POSTROUTING --proto tcp -t nat -o tun0 -j MASQUERADE
 screen -d -m badvpn-tun2socks --tundev tun0 --netif-ipaddr 10.0.0.2 --netif-netmask 255.255.255.0 --socks-server-addr 127.0.0.1:1080 --loglevel 0
 ifconfig tun0 10.0.0.1 netmask 255.255.255.0
 echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Routing host SSH, IP Gateway dan dns..";sleep 1
-ifaces=$(ip r|grep default|grep proto|awk '{print $5}')
-route add $host dev $ifaces 2>/dev/null
+ifaces=$(ip r|grep default|grep proto|awk '{print $3}')
+route add $host gw $ifaces 2>/dev/null
 route add default gw 10.0.0.2 metric 6
-route add 8.8.8.8 dev $ifaces 2>/dev/null
+route add 8.8.8.8 gw $ifaces 2>/dev/null
 echo "##############################################"
 echo -e "  Host: $host\n  Port: $port\n  User: $user\n  Pass: ********\n##############################################"
-echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Menjalankan SSH (xxdi latarbelakang)....";sleep 1
+echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Menjalankan SSH (di latarbelakang)....";sleep 1
 
-sshpass -p "$pass" ssh -oTCPKeepAlive=yes -oServerAliveInterval=300 -oStrictHostKeyChecking=no -CND 127.0.0.1:1080 -p $port $user@$host -o "Proxycommand=corkscrew 127.0.0.1 8789 %h %p"
+screen -d -m sshpass -p "$pass" ssh -oTCPKeepAlive=yes -oServerAliveInterval=300 -oStrictHostKeyChecking=no -CND 127.0.0.1:1080 -p $port $user@$host -o "Proxycommand=corkscrew 127.0.0.1 8789 %h %p"
 echo -ne "\e[33;1m{$(date +%M:%S)}\e[0m Menguji Koneksi... ";n=1
  while true; do
 r=$(curl -m3 www.google.com -w "%{http_code}\n" --proxy socks://127.0.0.1:1080 -s -o /dev/null)
