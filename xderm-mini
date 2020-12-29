@@ -183,7 +183,6 @@ r=\$(curl -m3 www.google.com -w \"%{http_code}\" --proxy socks://127.0.0.1:1080 
 r=\$(curl -m3 www.google.com -w \"%{http_code}\" --proxy socks://127.0.0.1:1080 -s -o /dev/null)
  fi
   if [ \$r != 200 ]; then
-echo \"rekonek...\"
 killall -q sshpass
 screen -d -m sshpass -p \"$pass\" ssh -oServerAliveInterval=60 -oStrictHostKeyChecking=no -CND 127.0.0.1:1080 -p $port $user@$host -o \"Proxycommand=corkscrew 127.0.0.1 8789 %h %p\";sleep 10
   fi
