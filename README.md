@@ -1,4 +1,4 @@
-# xderm-mini SSH SSL INJECTOR & TUNNELING
+# xderm-mini SSH SSL Injector & Tunneling
 for profesional tool script armbian stb
 
 dibutuhkan: python3
