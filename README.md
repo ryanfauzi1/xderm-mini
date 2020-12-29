@@ -8,4 +8,13 @@ wget https://raw.githubusercontent.com/ryanfauzi1/xderm-mini/main/xderm-mini && 
 
 setelah setup selesai, ketik xderm-mini untuk perintah yang lain.
 
+buat config file di directory root dengan nama config.txt
+isi seperti dibawah ini
+
+host=139.59.112.11
+port=444
+user=bestvpnssh-ryanganteng1
+pass=121123q
+sni=www.whatsapp.com
+
 Thanks.
