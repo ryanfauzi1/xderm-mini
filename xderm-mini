@@ -164,7 +164,7 @@ route add $host gw $ifaces 2>/dev/null
 route add default gw 10.0.0.2 metric 6
 route add 8.8.8.8 gw $ifaces 2>/dev/null
 echo "##############################################"
-echo -e "  Host: $host\n  Port: $port\n  Port UDPgw: $pudp\n  User: $user\n  Pass: ********\n##############################################"
+echo -e "  Host: $host\n  Port: $port\n  User: $user\n  Pass: ********\n  Port UDPgw: $pudp\n##############################################"
 echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Menjalankan SSH (di latarbelakang)....";sleep 1
 
 screen -d -m sshpass -p "$pass" ssh -oTCPKeepAlive=yes -oServerAliveInterval=300 -oStrictHostKeyChecking=no -CND 127.0.0.1:1080 -p $port $user@$host -o "Proxycommand=corkscrew 127.0.0.1 8789 %h %p"
