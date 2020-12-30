@@ -1,6 +1,6 @@
 host=139.59.xx.xx
 port=4xx
-portudp=7300
+pudp=7300
 user=uxxx
 pass=1xxx
 sni=xnxx.com
