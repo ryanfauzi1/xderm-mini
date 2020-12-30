@@ -155,7 +155,8 @@ echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Menjalankan Badvpn-tun2socks....";sleep 1
 iptables -A POSTROUTING --proto tcp -t nat -o tun0 -j MASQUERADE
   fi
 #mkdir -p /dev/net;mknod /dev/net/tun c 10 200 2>/dev/null;chmod 600 /dev/net/tun;openvpn --mktun --dev tun0 --verb 0
-screen -d -m badvpn-tun2socks --tundev tun0 --netif-ipaddr 10.0.0.2 --netif-netmask 255.255.255.0 --socks-server-addr 127.0.0.1:1080 --loglevel 0
+pudp=$(grep portudp /root/config.txt|awk -F "=" '{print $2}')
+screen -d -m badvpn-tun2socks --tundev tun0 --netif-ipaddr 10.0.0.2 --netif-netmask 255.255.255.0 --socks-server-addr 127.0.0.1:1080 --socks5-udp --udpgw-remote-server-addr 127.0.0.1:$pudp --udpgw-transparent-dns --loglevel 0
 ifconfig tun0 10.0.0.1 netmask 255.255.255.0
 echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Routing host SSH, IP Gateway dan dns..";sleep 1
 ifaces=$(ip r|grep default|grep proto|awk '{print $3}')
