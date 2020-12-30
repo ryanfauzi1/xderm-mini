@@ -167,7 +167,7 @@ echo "##############################################"
 echo -e "  Host: $host\n  Port: $port\n  User: $user\n  Pass: ********\n  Port UDPgw: $pudp\n##############################################"
 echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Menjalankan SSH (di latarbelakang)....";sleep 1
 
-screen -d -m sshpass -p "$pass" ssh -oTCPKeepAlive=yes -oServerAliveInterval=300 -oStrictHostKeyChecking=no -CND 127.0.0.1:1080 -p $port $user@$host -o "Proxycommand=corkscrew 127.0.0.1 8789 %h %p"
+screen -d -m sshpass -p "$pass" ssh -oTCPKeepAlive=yes -oServerAliveInterval=300 -oStrictHostKeyChecking=no -CND 127.0.0.1:1080 -p $port $user@$host -o "Proxycommand=corkscrew 127.0.0.1 8789 %h %p";sleep 2
 echo -ne "\e[33;1m{$(date +%M:%S)}\e[0m Menguji Koneksi... ";n=1
  while true; do
 r=$(curl -m3 www.google.com -w "%{http_code}\n" --proxy socks://127.0.0.1:1080 -s -o /dev/null)
