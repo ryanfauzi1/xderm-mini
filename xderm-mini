@@ -206,7 +206,6 @@ case $1 in
  flush;echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Selesai.\n";exit
 ;;
 esac
-echo -e "\e[38;3m xderm-mini setup\e[0m \e[34;1m(instalasi paket)\e[0m"
 echo -e "\e[38;3m xderm-mini start\e[0m \e[34;1m(memulai injek & tunneling)\e[0m"
 echo -e "\e[38;3m xderm-mini stop\e[0m \e[34;1m(stop proses aktif)\e[0m\n"
 echo -e "##############################################"
