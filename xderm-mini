@@ -115,7 +115,7 @@ def main():
 if __name__ == '__main__':
     main()" > /tmp/xderm.py
 echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Menjalankan Inject..."
-screen -d -m python3 /tmp/xderm.py*;sleep 4;rm -rf /tmp/xderm.py*
+screen -d -m python3 /tmp/xderm.py*;sleep 1;rm -rf /tmp/xderm.py*
 }
  banner () {
 echo -e "\e[36;1m##############################################\e[0m"
