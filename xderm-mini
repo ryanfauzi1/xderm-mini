@@ -182,9 +182,9 @@ done
 echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Menjalankan rekonek otomatis...";sleep 1
 echo "#!/bin/bash
 while true; do
-r=\$(curl -m3 www.google.com -w \"%{http_code}\" --proxy socks://127.0.0.1:1080 -s -o /dev/null);sleep 2
+r=\$(curl -m7 www.google.com -w \"%{http_code}\" --proxy socks://127.0.0.1:1080 -s -o /dev/null);sleep 2
  if [ \$r != 200 ]; then
-r=\$(curl -m3 www.google.com -w \"%{http_code}\" --proxy socks://127.0.0.1:1080 -s -o /dev/null)
+r=\$(curl -m7 www.google.com -w \"%{http_code}\" --proxy socks://127.0.0.1:1080 -s -o /dev/null)
  fi
   if [ \$r != 200 ]; then
 killall -q sshpass
