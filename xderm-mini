@@ -174,7 +174,7 @@ r=$(curl -m3 www.google.com -w "%{http_code}\n" --proxy socks://127.0.0.1:1080 -
   if [ $r -eq 200 ]; then
   echo -e "\e[32;1mHTTP/1.1 $r OK\e[0m";break
   fi
-   if [ $n -eq 12 ]; then
+   if [ $n -eq 13 ]; then
     echo -e "\e[31;1mNot Connect!\e[0m";flush;echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Berhenti.\n";exit
    fi
 ((n++));sleep 1
