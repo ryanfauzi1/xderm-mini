@@ -127,7 +127,7 @@ killall -q sshpass openvpn autorekonek
 kill $(ps ax|grep python3|grep SCREEN|grep xderm.py|awk '{print $1}') 2>/dev/null
 kill $(ps ax|grep SCREEN|grep badvpn-tun2socks|awk "NR==1"|awk '{print $1}') 2>/dev/null
 }
-#banner
+banner
  setup () {
 echo -e "\e[36;3m Memperbarui Repository...\e[0m";sleep 1;apt update;sleep 2;clear
 banner;echo -e "\e[36;3m Menginstall Paket build dan Pendukung...\e[0m";sleep 1;apt install -y build-essential cmake git curl psmisc sshpass screen corkscrew openvpn python3-pip
