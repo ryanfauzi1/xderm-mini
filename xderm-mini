@@ -207,7 +207,7 @@ case $1 in
  wget -O /usr/bin/xderm-mini $url && chmod +x /usr/bin/xderm-mini;clear
  banner;echo -e "\e[36;3m Memperbarui versi script...\e[0m";echo -e "\e[31;1m Selesai.\n"
  else
- echo -e "\e[31;1m Anda sudah menggunakan versi terbaru xderm.\e[0m";sleep 1
+ echo -e "\e[31;1m Anda sudah menggunakan versi terbaru xderm.\e[0m\n";sleep 1
   fi
  exit
 ;;
