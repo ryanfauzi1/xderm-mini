@@ -182,7 +182,7 @@ echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Menjalankan SSH (di latarbelakang)....";s
 screen -dmS xderm sshpass -p "$pass" ssh -oTCPKeepAlive=yes -oServerAliveInterval=180 -oServerAliveCountMax=2 -oStrictHostKeyChecking=no -CND 127.0.0.1:1080 -p $port $user@$host -o "Proxycommand=corkscrew 127.0.0.1 8789 %h %p";sleep 2
 echo -ne "\e[33;1m{$(date +%M:%S)}\e[0m Menguji Koneksi... ";n=1
  while true; do
-r=$(curl -m3 www.google.com -w "%{http_code}\n" --proxy socks://127.0.0.1:1080 -s -o /dev/null)
+r=$(curl -m4 www.google.com -w "%{http_code}\n" --proxy socks://127.0.0.1:1080 -s -o /dev/null)
   if [ $r -eq 200 ]; then
   echo -e "\e[32;1mHTTP/1.1 $r OK\e[0m";break
   fi
