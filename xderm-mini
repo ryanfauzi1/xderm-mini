@@ -149,7 +149,7 @@ echo -e "\e[31;1m Setup Selesai.\e[0m\n"
  else
  echo -e "\e[36;3m (Terbaru!)\e[0m\n";sleep 1
   fi
-  echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Selesai.\n"
+  echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Selesai.\n";exit
   }
  start () {
 #########################
@@ -212,7 +212,7 @@ case $1 in
  start
  ;;
  "update")
- update;exit
+ update
 ;;
  "stop")
  flush;echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Selesai.\n";exit
