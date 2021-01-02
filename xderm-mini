@@ -205,7 +205,7 @@ case $1 in
  v=$(curl -m15 $url -s|grep "Current versi"|awk "NR==2"|awk '{print $6}')
   if [ "$v" != "4.1" ]; then
  echo -e "\e[36;3m (Memperbarui..)\e[0m";sleep 1
- wget -O /usr/bin/xderm-mini $url && chmod +x /usr/bin/xderm-mini -nv
+ wget -O /usr/bin/xderm-mini $url -q && chmod +x /usr/bin/xderm-mini
  else
  echo -e "\e[36;3m (Terbaru!)\e[0m\n";sleep 1
   fi
