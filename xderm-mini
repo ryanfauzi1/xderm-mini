@@ -202,7 +202,7 @@ case $1 in
  "update")
  url="https://raw.githubusercontent.com/ryanfauzi1/xderm-mini/main/xderm-mini"
  v=$(curl -m15 $url -s|grep "Current versi"|awk "NR==2"|awk '{print $6}')
- echo ". $v ."
+ echo ". $v ,"
   if [ $v != "4.1" ]; then
  echo -e "\e[36;3m Memperbarui versi script...\e[0m";sleep 1
  wget -O /usr/bin/xderm-mini $url && chmod +x /usr/bin/xderm-mini;clear
