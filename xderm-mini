@@ -144,14 +144,15 @@ echo -e "\e[31;1m Setup Selesai.\e[0m\n"
  echo -ne "\e[33;1m{$(date +%M:%S)}\e[0m Checking for update..."
  v=$(curl -m15 $url -s|grep "Current versi"|awk "NR==2"|awk '{print $6}')
  if [ ! -f $v ]; then
-  if [ "$v" != "4.3" ]; then
+  if [ "$v" != "4.4" ]; then
  echo -e "\e[36;3m (Memperbarui..)\e[0m";sleep 1
  wget -O /usr/bin/xderm-mini $url -q;chmod +x /usr/bin/xderm-mini
  else
  echo -e "\e[36;3m (Terbaru!)\e[0m";sleep 1
   fi
  else
- echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Update Gagal (no koneksi), Mungkin terjadi masalah pada DNS.\n"
+ echo -e "\e[36;3m (no koneksi!)\e[0m\n"
+ echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Update Gagal, Mungkin terjadi masalah pada DNS."
  fi
   echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Selesai.\n";exit
   }
@@ -226,5 +227,5 @@ echo -e "\e[38;3m xderm-mini start\e[0m \e[34;1m(memulai injek & tunneling)\e[0m
 echo -e "\e[38;3m xderm-mini stop\e[0m \e[34;1m(stop proses aktif)\e[0m"
 echo -e "\e[38;3m xderm-mini update\e[0m \e[34;1m(update versi script)\e[0m\n"
 echo -e "##############################################"
-echo -e "           \e[33;1mCurrent versi 4.3 Copyright ®2021"
+echo -e "           \e[33;1mCurrent versi 4.4 Copyright ®2021"
 echo -e "           Openwrt Tunnel & Logika Bash Linux\e[0m\n"
