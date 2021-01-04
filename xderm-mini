@@ -126,6 +126,7 @@ echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Membersihkan sisa sisa....";sleep 1
 killall -q sshpass openvpn autorekonek
 kill $(ps ax|grep python3|grep SCREEN|grep xderm.py|awk '{print $1}') 2>/dev/null
 kill $(ps ax|grep SCREEN|grep badvpn-tun2socks|awk "NR==1"|awk '{print $1}') 2>/dev/null
+rm -rf screenlog.0
 }
 banner
  setup () {
@@ -141,10 +142,10 @@ echo -e "\e[31;1m Setup Selesai.\e[0m\n"
 }
  update () {
  url="https://raw.githubusercontent.com/ryanfauzi1/xderm-mini/main/xderm-mini"
- echo -ne "\e[33;1m{$(date +%M:%S)}\e[0m Checking for update..."
+ echo -ne "\e[33;1m{$(date +%M:%S)}\e[0m Checking for update...";sleep 2
  v=$(curl -m15 $url -s|grep "Current versi"|awk "NR==2"|awk '{print $6}')
  if [ ! -f $v ]; then
-  if [ "$v" != "5.0" ]; then
+  if [ "$v" != "5.1" ]; then
  echo -e "\e[36;3m (Memperbarui..)\e[0m";sleep 1
  wget -O /usr/bin/xderm-mini $url -q;chmod +x /usr/bin/xderm-mini
  else
@@ -184,15 +185,19 @@ echo "##############################################"
 echo -e "  Host: $host\n  Port: $port\n  User: $user\n  Pass: ********\n  Port UDPgw: $pudp\n##############################################"
 echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Menjalankan SSH (di latarbelakang)....";sleep 1
 
-screen -dmS xderm sshpass -p "$pass" ssh -oTCPKeepAlive=yes -oServerAliveInterval=180 -oServerAliveCountMax=2 -oStrictHostKeyChecking=no -CND 127.0.0.1:1080 -p $port $user@$host -o "Proxycommand=corkscrew 127.0.0.1 8789 %h %p";sleep 2
+screen -L -dmS xderm sshpass -p "$pass" ssh -oTCPKeepAlive=yes -oServerAliveInterval=180 -oServerAliveCountMax=2 -oStrictHostKeyChecking=no -CND 127.0.0.1:1080 -p $port $user@$host -o "Proxycommand=corkscrew 127.0.0.1 8789 %h %p";sleep 2
 echo -ne "\e[33;1m{$(date +%M:%S)}\e[0m Menguji Koneksi... ";n=1
  while true; do
 r=$(curl -m4 www.google.com -w "%{http_code}\n" --proxy socks://127.0.0.1:1080 -s -o /dev/null)
   if [ $r -eq 200 ]; then
-  echo -e "\e[32;1mHTTP/1.1 $r OK\e[0m";break
+  echo -e "\e[32;1mHTTP/1.1 $r OK\e[0m";rm -rf screenlog.0;break
   fi
    if [ $n -eq 13 ]; then
-    echo -e "\e[31;1mNot Connect!\e[0m";flush;echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Berhenti.\n";exit
+    echo -e "\e[31;1mNot Connect!\e[0m"
+     if [ ! -f $(grep Permission screenlog.0|awk '{print $4}') ]; then
+     echo -e "\e[33;1m{$(date +%M:%S)}\e[0m \e[36;3mUsername/Password Salah/Kadaluarsa.\e[0m"
+     fi
+    flush;echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Berhenti.\n";exit
    fi
 ((n++));sleep 1
 done
@@ -227,5 +232,5 @@ echo -e "\e[38;3m xderm-mini start\e[0m \e[34;1m(memulai injek & tunneling)\e[0m
 echo -e "\e[38;3m xderm-mini stop\e[0m \e[34;1m(stop proses aktif)\e[0m"
 echo -e "\e[38;3m xderm-mini update\e[0m \e[34;1m(update versi script)\e[0m\n"
 echo -e "##############################################"
-echo -e "           \e[33;1mCurrent versi 5.0 Copyright ®2021"
+echo -e "           \e[33;1mCurrent versi 5.1 Copyright ®2021"
 echo -e "           Openwrt Tunnel & Logika Bash Linux\e[0m\n"
