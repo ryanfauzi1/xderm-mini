@@ -199,7 +199,7 @@ done
 echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Menjalankan rekonek otomatis...";sleep 1
 echo "#!/bin/bash
 while true; do
-r=\$(curl -m100 www.google.com -w \"%{http_code}\" --proxy socks://127.0.0.1:1080 -s -o /dev/null);sleep 2
+r=\$(curl -m88 www.google.com -w \"%{http_code}\" --proxy socks://127.0.0.1:1080 -s -o /dev/null);sleep 2
   if [ \$r != 200 ]; then
 killall -q sshpass
 screen -dmS xdermr sshpass -p \"$pass\" ssh -oTCPKeepAlive=yes -oServerAliveInterval=180 -oServerAliveCountMax=2 -oStrictHostKeyChecking=no -CND 127.0.0.1:1080 -p $port $user@$host -o \"Proxycommand=corkscrew 127.0.0.1 8789 %h %p\";sleep 10
