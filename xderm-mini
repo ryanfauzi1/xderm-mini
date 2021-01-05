@@ -151,7 +151,7 @@ echo -e "\e[31;1m Setup Selesai.\e[0m\n"
  ch=$(curl -m16 $url/changelog.txt -s --compressed)
  echo -e "   ****************************************"
  echo -e "\e[3m$ch\e[0m\n   ****************************************"
- echo -e "\e[33;1m{$(date +%M:%S)}\e[0m \e[36;3mScript diUpdate, Silahkan Start Ulang!\e[0m"
+ echo -e "\e[33;1m{$(date +%M:%S)}\e[0m \e[31;3mScript diUpdate, Silahkan Start Ulang!\e[0m"
  else
  echo -e "\e[36;3m (Terbaru!)\e[0m";sleep 1
   fi
