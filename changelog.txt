@@ -1,4 +1,4 @@
      - Changelog:
-     - gan ane mules :(
+     - gan ane mules :3
      - notif ini tampil jika update success
      - updated xderm versi 5.5
