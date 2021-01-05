@@ -1,4 +1,5 @@
      - Changelog:
-     - gan ane mules :v
+     - increase network stability
+     - gak maksa donasi sih,,xixixi
      - notif ini tampil jika update success
      - updated xderm versi 5.5
