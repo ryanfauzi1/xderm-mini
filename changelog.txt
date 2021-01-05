@@ -1,4 +1,4 @@
       - Changelog:
       - gan ane mules :(
-      - notif ini hanya tampil ketika update success
+      - notif ini hanya tampil jika update success
       - updated xderm versi 5.5
