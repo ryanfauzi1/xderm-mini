@@ -1,5 +1,5 @@
      - Changelog:
      - increase stability tunneling
-     - gak maksa donasi sih,,xixixi
      - notif ini tampil jika update success
      - updated xderm versi 5.5
+     - kritik & saran (WA 083862963507)
