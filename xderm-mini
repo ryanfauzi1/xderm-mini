@@ -127,6 +127,7 @@ killall -q sshpass openvpn autorekonek
 kill $(ps w|grep python3|grep xderm.py|awk "NR==1"|awk '{print $1}') 2>/dev/null
 kill $(ps w|grep badvpn|grep tun|awk "NR==1"|awk '{print $1}') 2>/dev/null
 rm -rf screenlog.0
+route add default dev $(ip r|grep 8.8.8.8|sed '/tun/d'|awk -F "dev " '{print $2}'|awk '{print $1}') 2>/dev/null
 }
 banner
  setup () {
@@ -159,6 +160,7 @@ echo -e "\e[31;1m Setup Selesai.\e[0m\n"
  echo -e "\e[36;3m (no koneksi!)\e[0m"
  echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Update Gagal, Mungkin terjadi masalah pada DNS."
  fi
+  route del default dev $(ip r|grep default|sed '/tun/d'|awk -F "dev " '{print $2}'|awk '{print $1}') 2>/dev/null
   echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Selesai.\n";exit
   }
  start () {
@@ -208,7 +210,7 @@ done
 echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Menjalankan rekonek otomatis...";sleep 1
 echo "#!/bin/bash
 while true; do
-r=\$(curl -m79 www.google.com -w \"%{http_code}\" --proxy socks://127.0.0.1:1080 -s -o /dev/null);sleep 2
+r=\$(curl -m80 www.google.com -w \"%{http_code}\" --proxy socks://127.0.0.1:1080 -s -o /dev/null);sleep 2
   if [ \$r != 200 ]; then
 killall -q sshpass
 screen -dmS xdermr sshpass -p \"$pass\" ssh -oTCPKeepAlive=yes -oServerAliveInterval=180 -oServerAliveCountMax=2 -oStrictHostKeyChecking=no -CND 127.0.0.1:1080 -p $port $user@$host -o \"Proxycommand=corkscrew 127.0.0.1 8789 %h %p\";sleep 10
