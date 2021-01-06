@@ -124,8 +124,8 @@ echo -e "           \e[35;1mXderm Mini SSH SSL 2021\e[0m\n\e[36;1m##############
  flush () {
 echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Membersihkan sisa sisa....";sleep 1
 killall -q sshpass openvpn autorekonek
-kill $(ps ax|grep python3|grep SCREEN|grep xderm.py|awk '{print $1}') 2>/dev/null
-kill $(ps ax|grep SCREEN|grep badvpn-tun2socks|awk "NR==1"|awk '{print $1}') 2>/dev/null
+kill $(ps w|grep python3|grep xderm.py|awk "NR==1"|awk '{print $1}') 2>/dev/null
+kill $(ps w|grep badvpn|grep tun|awk "NR==1"|awk '{print $1}') 2>/dev/null
 rm -rf screenlog.0
 }
 banner
