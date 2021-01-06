@@ -1,5 +1,5 @@
      - Changelog:
      - added support to pi
      - notif ini tampil jika update sukses
-     - UPDATED xderm versi 5.5
+     - UPDATED xderm versi 5.6
      - kritik & saran (WA 083862963507)
