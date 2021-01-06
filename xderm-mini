@@ -146,7 +146,7 @@ echo -e "\e[31;1m Setup Selesai.\e[0m\n"
  echo -ne "\e[33;1m{$(date +%M:%S)}\e[0m Checking for update...";sleep 3
  v=$(curl -m19 $url/xderm-mini -s|grep "Current versi"|awk "NR==2"|awk '{print $6}')
  if [ ! -f $v ]; then
-  if [ "$v" != "5.5" ]; then
+  if [ "$v" != "5.6" ]; then
  echo -e "\e[36;3m (Memperbarui..)\e[0m";sleep 1
  wget -O /usr/bin/xderm-mini $url/xderm-mini -q;chmod +x /usr/bin/xderm-mini
  ch=$(curl -m20 $url/changelog.txt -s)
@@ -237,5 +237,5 @@ echo -e "\e[38;3m xderm-mini start\e[0m \e[34;1m(memulai injek & tunneling)\e[0m
 echo -e "\e[38;3m xderm-mini stop\e[0m \e[34;1m(stop proses aktif)\e[0m"
 echo -e "\e[38;3m xderm-mini update\e[0m \e[34;1m(update versi script)\e[0m\n"
 echo -e "##############################################"
-echo -e "           \e[33;1mCurrent versi 5.5 Copyright ®2021"
+echo -e "           \e[33;1mCurrent versi 5.6 Copyright ®2021"
 echo -e "           Openwrt Tunnel & Logika Bash Linux\e[0m\n"
