@@ -180,7 +180,29 @@ port=$(grep port /root/config.txt|awk -F "=" '{print $2}')
 user=$(grep user /root/config.txt|awk -F "=" '{print $2}')
 pass=$(grep pass /root/config.txt|awk -F "=" '{print $2}')
 #########################
-flush;injek
+flush;sni=$(grep sni /root/config.txt|awk -F "=" '{print $2}')
+ifaces=$(ip r|grep default|awk '{print $3}')
+ if [ ! -f $(echo $ifaces|awk -F "." '{print $2}') ]; then
+  type=gw
+ else
+  type=dev
+ fi
+netuji=www.smadav.net
+route add $netuji $type $ifaces;killall -q timeout
+echo "#!/bin/bash
+sleep 9;killall -q openssl" > /tmp/timeout;screen -dmS cb bash /tmp/timeout
+echo -ne "\e[33;1m{$(date +%M:%S)}\e[0m Menguji bug... "
+ if [ -f $(echo "exit"|openssl 2>/dev/null) ]; then
+echo -e "\n -\e[31;1mtidak ada paket openssl, install dulu!\e[0m \n"
+route del $netuji 2>/dev/null;exit
+ fi
+supp=$(echo "QUIT"|openssl s_client -connect $netuji:443 -servername $sni 2>/dev/null|grep supp|awk '{print $4}')
+ if [ ! -f $supp ]; then
+echo -e "\e[32;1mOK\e[0m"
+else
+echo -e "\e[31;1mClosed!\e[0m";exit
+ fi
+route del $netuji 2>/dev/null;injek
 echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Menjalankan Badvpn-tun2socks....";sleep 1
   if [ -f $(iptables -t nat  -L|grep MASQ|grep tcp|awk '{print $1}') ]; then
 iptables -A POSTROUTING --proto tcp -t nat -o tun0 -j MASQUERADE
@@ -189,12 +211,6 @@ pudp=$(grep pudp /root/config.txt|awk -F "=" '{print $2}')
 screen -dmS gerbang badvpn-tun2socks --tundev tun0 --netif-ipaddr 10.0.0.2 --netif-netmask 255.255.255.0 --socks-server-addr 127.0.0.1:1080 --udpgw-remote-server-addr 127.0.0.1:$pudp --udpgw-transparent-dns --loglevel 0;sleep 2
 ifconfig tun0 10.0.0.1 netmask 255.255.255.0
 echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Routing host SSH, IP Gateway dan dns..";sleep 1
-ifaces=$(ip r|grep default|awk '{print $3}')
- if [ ! -f $(echo $ifaces|awk -F "." '{print $2}') ]; then
-  type=gw
- else
-  type=dev
- fi
 echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Menggunakan \e[35;1m$ifaces\e[0m sebagai Pusat sumber."
 route add $host $type $ifaces
 route add default gw 10.0.0.2 metric 0
