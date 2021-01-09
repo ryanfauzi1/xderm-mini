@@ -196,7 +196,7 @@ ifaces=$(ip r|grep default|awk '{print $3}')
  else
   type=dev
  fi
-route add $host $type $ifaces 2>/dev/null
+route add $host $type $ifaces
 route add default gw 10.0.0.2 metric 6
 route add 8.8.8.8 $type $ifaces 2>/dev/null
 echo "##############################################"
