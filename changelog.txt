@@ -1,6 +1,5 @@
      - Changelog:
-     - fix all error
-     - add new fiturs!
+     - fix all error & add new fiturs!
      - notif ini tampil jika update sukses
      - UPDATED xderm versi 5.8
      - kritik & saran (WA 083862963507)
