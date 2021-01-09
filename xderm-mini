@@ -128,7 +128,7 @@ kill $(ps w|grep python3|grep xderm.py|awk "NR==1"|awk '{print $1}') 2>/dev/null
 kill $(ps w|grep badvpn|grep tun|awk "NR==1"|awk '{print $1}') 2>/dev/null
 rm -rf screenlog.0;sleep 1
 ifaces=$(ip r|grep default|awk '{print $3}')
- if [ ! -f $(echo $ifaces|awk -F "." '{print $1}') ]; then
+ if [ ! -f $(echo $ifaces|awk -F "." '{print $2}') ]; then
   type=gw
  else
   type=dev
@@ -190,13 +190,13 @@ screen -dmS gerbang badvpn-tun2socks --tundev tun0 --netif-ipaddr 10.0.0.2 --net
 ifconfig tun0 10.0.0.1 netmask 255.255.255.0
 echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Routing host SSH, IP Gateway dan dns..";sleep 1
 ifaces=$(ip r|grep default|awk '{print $3}')
- if [ ! -f $(echo $ifaces|awk -F "." '{print $1}') ]; then
+ if [ ! -f $(echo $ifaces|awk -F "." '{print $2}') ]; then
   type=gw
  else
   type=dev
  fi
 route add $host $type $ifaces
-route add default gw 10.0.0.2 metric 6
+route add default gw 10.0.0.2 metric 0
 route add 8.8.8.8 $type $ifaces 2>/dev/null
 echo "##############################################"
 echo -e "  Host: $host\n  Port: $port\n  User: $user\n  Pass: ********\n  Port UDPgw: $pudp\n##############################################"
@@ -208,7 +208,7 @@ r=$(curl -m4 www.google.com -w "%{http_code}\n" --proxy socks://127.0.0.1:1080 -
   if [ $r -eq 200 ]; then
   echo -e "\e[32;1mHTTP/1.1 $r OK\e[0m";rm -rf screenlog.0;break
   fi
-   if [ $n -eq 13 ]; then
+   if [ $n -eq 17 ]; then
     echo -e "\e[31;1mNot Connect!\e[0m"
      if [ ! -f $(grep Permission screenlog.0|awk '{print $4}') ]; then
      echo -e "\e[33;1m{$(date +%M:%S)}\e[0m \e[36;3mUsername/Password Salah/Kadaluarsa.\e[0m"
