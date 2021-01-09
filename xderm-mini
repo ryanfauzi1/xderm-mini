@@ -135,7 +135,7 @@ ifaces=$(ip r|grep default|awk '{print $3}')
  fi
 host=$(grep host /root/config.txt|awk -F "=" '{print $2}')
 route del $host $type $ifaces 2>/dev/null
-route del 8.8.8.8 $type $ifaces 2>/dev/null
+route del 8.8.8.8 $type $ifaces 2>/dev/null;sleep 1
 }
 banner
  setup () {
