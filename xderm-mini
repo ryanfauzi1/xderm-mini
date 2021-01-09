@@ -128,7 +128,7 @@ kill $(ps w|grep python3|grep xderm.py|awk "NR==1"|awk '{print $1}') 2>/dev/null
 kill $(ps w|grep badvpn|grep tun|awk "NR==1"|awk '{print $1}') 2>/dev/null
 rm -rf screenlog.0;sleep 1
 ifaces=$(ip r|grep default|awk '{print $3}')
- if [ ! -f $(echo $ifaces|awk -F "." '{print $1}' ]; then
+ if [ ! -f $(echo $ifaces|awk -F "." '{print $1}') ]; then
   type=gw
  else
   type=dev
@@ -191,7 +191,7 @@ screen -dmS gerbang badvpn-tun2socks --tundev tun0 --netif-ipaddr 10.0.0.2 --net
 ifconfig tun0 10.0.0.1 netmask 255.255.255.0
 echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Routing host SSH, IP Gateway dan dns..";sleep 1
 ifaces=$(ip r|grep default|awk '{print $3}')
- if [ ! -f $(echo $ifaces|awk -F "." '{print $1}' ]; then
+ if [ ! -f $(echo $ifaces|awk -F "." '{print $1}') ]; then
   type=gw
  else
   type=dev
