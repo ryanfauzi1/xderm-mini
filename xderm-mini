@@ -191,7 +191,7 @@ netuji=www.smadav.net
 route add $netuji $type $ifaces;killall -q timeout
 echo "#!/bin/bash
 sleep 9;killall -q openssl" > /tmp/timeout;screen -dmS cb bash /tmp/timeout
-echo -ne "\e[33;1m{$(date +%M:%S)}\e[0m Menguji bug... "
+echo -ne "\e[33;1m{$(date +%M:%S)}\e[0m Menguji bug SNI... "
  if [ -f $(echo "exit"|openssl 2>/dev/null) ]; then
 echo -e "\n -\e[31;1mtidak ada paket openssl, install dulu!\e[0m \n"
 route del $netuji 2>/dev/null;exit
