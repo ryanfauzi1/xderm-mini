@@ -126,9 +126,16 @@ echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Membersihkan sisa sisa....";sleep 1
 killall -q sshpass openvpn autorekonek
 kill $(ps w|grep python3|grep xderm.py|awk "NR==1"|awk '{print $1}') 2>/dev/null
 kill $(ps w|grep badvpn|grep tun|awk "NR==1"|awk '{print $1}') 2>/dev/null
-rm -rf screenlog.0
-#dev=$(ip r|grep 8.8.8.8|sed '/tun/d'|awk -F "dev " '{print $2}'|awk '{print $1}')
-#route add default dev $dev 2>/dev/null
+rm -rf screenlog.0;sleep 1
+ifaces=$(ip r|grep default|awk '{print $3}')
+ if [ ! -f $(echo $ifaces|awk -F "." '{print $1}' ]; then
+  type=gw
+ else
+  type=dev
+ fi
+host=$(grep host /root/config.txt|awk -F "=" '{print $2}')
+route del $host $type $ifaces 2>/dev/null
+route del 8.8.8.8 $type $ifaces 2>/dev/null
 }
 banner
  setup () {
@@ -184,9 +191,14 @@ screen -dmS gerbang badvpn-tun2socks --tundev tun0 --netif-ipaddr 10.0.0.2 --net
 ifconfig tun0 10.0.0.1 netmask 255.255.255.0
 echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Routing host SSH, IP Gateway dan dns..";sleep 1
 ifaces=$(ip r|grep default|awk '{print $3}')
-route add $host gw $ifaces 2>/dev/null
+ if [ ! -f $(echo $ifaces|awk -F "." '{print $1}' ]; then
+  type=gw
+ else
+  type=dev
+ fi
+route add $host $type $ifaces 2>/dev/null
 route add default gw 10.0.0.2 metric 6
-route add 8.8.8.8 gw $ifaces 2>/dev/null
+route add 8.8.8.8 $type $ifaces 2>/dev/null
 echo "##############################################"
 echo -e "  Host: $host\n  Port: $port\n  User: $user\n  Pass: ********\n  Port UDPgw: $pudp\n##############################################"
 echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Menjalankan SSH (di latarbelakang)....";sleep 1
