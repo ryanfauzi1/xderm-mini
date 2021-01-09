@@ -1,5 +1,5 @@
 #!/bin/bash
-#xderm_mini2021stable
+#xderm_mini2021_stable
 clear
  injek () {
 sni=$(grep sni /root/config.txt|awk -F "=" '{print $2}')
