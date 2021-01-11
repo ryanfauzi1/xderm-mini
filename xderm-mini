@@ -267,9 +267,9 @@ sleep 1
  }
  enable () {
  if [ ! -f $(grep xderm- /etc/rc.local|awk '{print $1}'|awk -F "-" '{print $1}') ]; then
-sed -i "s/$(grep xderm- /etc/rc.local)/xderm-boot/g" /etc/rc.local 2>/dev/null
+sed -i "s/$(grep xderm- /etc/rc.local)/screen -dmS autos xderm-boot/g" /etc/rc.local 2>/dev/null
 else
-sed -i "s/$(grep exit /etc/rc.local)/xderm-boot\nexit 0/g" /etc/rc.local 2>/dev/null
+sed -i "s/$(grep exit /etc/rc.local)/screen -dmS autos xderm-boot\nexit 0/g" /etc/rc.local 2>/dev/null
  fi
 cf
 }
