@@ -193,8 +193,7 @@ ifaces=$(ip r|grep default|awk '{print $3}')
  else
   type=dev
  fi
-netuji=www.smadav.net
-route add $netuji $type $ifaces 2>/dev/null;killall -q timeout
+netuji=www.smadav.net;killall -q timeout
 echo "#!/bin/bash
 sleep 10;killall -q openssl" > /tmp/timeout;screen -dmS cb bash /tmp/timeout
 echo -ne "\e[33;1m{$(date +%M:%S)}\e[0m Menguji bug SNI... "
