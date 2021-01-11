@@ -204,7 +204,7 @@ echo -ne "\e[33;1m{$(date +%M:%S)}\e[0m Menguji bug SNI... "
 echo -e "\n -\e[31;1mtidak ada paket openssl, install dulu!\e[0m \n"
 route del $netuji 2>/dev/null;exit
  fi
-supp=$(echo "QUIT"|openssl s_client -connect $netuji:443 -servername $sni 2>/dev/null|grep supp|awk '{print $4}')
+supp=$(echo "QUIT"|openssl s_client -connect www.smadav.net:443 -servername $sni 2>/dev/null|grep supp|awk '{print $4}')
  if [ ! -f $supp ]; then
 echo -e "\e[32;1mOK\e[0m"
 else
