@@ -1,6 +1,7 @@
      - Changelog:
      - fix all error & add new fiturs!
      - add enable disable on boot
+     - fix routing for mode usbtether
      - notif ini tampil jika update sukses
-     - UPDATED xderm versi 6.2
+     - UPDATED xderm versi 6.4
      - kritik & saran (WA 083862963507)
