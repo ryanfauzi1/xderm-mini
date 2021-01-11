@@ -3,5 +3,5 @@
      - add enable disable on boot
      - fix routing for mode usbtether
      - notif ini tampil jika update sukses
-     - UPDATED xderm versi 6.4
+     - UPDATED xderm versi 6.5
      - kritik & saran (WA 083862963507)
