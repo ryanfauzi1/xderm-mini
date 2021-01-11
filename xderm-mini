@@ -260,7 +260,7 @@ echo "#!/bin/bash
  while true; do
 def=\$(ip r|grep default|awk '{print \$1}')
   if [ ! -f \$def ]; then
-   sleep 3;xderm-mini start;exit
+   sleep 12;xderm-mini start;exit
   fi
 sleep 1
  done" > /usr/bin/xderm-boot;chmod +x /usr/bin/xderm-boot
