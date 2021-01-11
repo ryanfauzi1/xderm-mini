@@ -132,8 +132,8 @@ ifaces=$(ip r|grep default|awk '{print $3}');netuji=144.217.180.194
    if [ $(echo $ifaces|awk -F "." '{print $4}'|wc -c) != "2" ]; then
   ipg=$(ip r|grep default|awk '{print $3}');ifaces=$(ip r|grep default|awk '{print $5}')
   ip route del $netuji dev $ifaces via $ipg 2>/dev/null
-  route del $host $type $ifaces 2>/dev/null
-  route del 8.8.8.8 $type $ifaces 2>/dev/null
+  ip route del $host dev $ifaces via $ipg 2>/dev/null
+  ip route del 8.8.8.8 dev $ifaces via $ipg 2>/dev/null
   else
   type=gw;route del $netuji $type $ifaces 2>/dev/null
   route del $host $type $ifaces 2>/dev/null
@@ -194,8 +194,8 @@ ifaces=$(ip r|grep default|awk '{print $3}');netuji=144.217.180.194;killall -q t
    if [ $(echo $ifaces|awk -F "." '{print $4}'|wc -c) != "2" ]; then
   ipg=$(ip r|grep default|awk '{print $3}');ifaces=$(ip r|grep default|awk '{print $5}')
   ip route add $netuji dev $ifaces via $ipg 2>/dev/null
-  route add $host $type $ifaces 2>/dev/null
-  route add 8.8.8.8 $type $ifaces 2>/dev/null
+  ip route add $host dev $ifaces via $ipg 2>/dev/null
+  ip route add 8.8.8.8 $ifaces via $ipg 2>/dev/null
   else
   type=gw;route add $netuji $type $ifaces 2>/dev/null
   route add $host $type $ifaces 2>/dev/null
