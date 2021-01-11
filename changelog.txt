@@ -1,5 +1,6 @@
      - Changelog:
      - fix all error & add new fiturs!
+     - add enable disable on boot
      - notif ini tampil jika update sukses
      - UPDATED xderm versi 5.8
      - kritik & saran (WA 083862963507)
