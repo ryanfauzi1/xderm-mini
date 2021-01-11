@@ -129,7 +129,11 @@ kill $(ps w|grep badvpn|grep tun|awk "NR==1"|awk '{print $1}') 2>/dev/null
 rm -rf screenlog.0;sleep 1
 ifaces=$(ip r|grep default|awk '{print $3}')
  if [ ! -f $(echo $ifaces|awk -F "." '{print $2}') ]; then
+   if [ $(echo $ifaces|awk -F "." '{print $4}'|wc -c) -eq 2 ]; then
   type=gw
+   else
+   type=dev;ifaces=$(ip r|grep default|awk '{print $5}')
+   fi
  else
   type=dev
  fi
@@ -183,7 +187,11 @@ pass=$(grep pass /root/config.txt|awk -F "=" '{print $2}')
 flush;sni=$(grep sni /root/config.txt|awk -F "=" '{print $2}')
 ifaces=$(ip r|grep default|awk '{print $3}')
  if [ ! -f $(echo $ifaces|awk -F "." '{print $2}') ]; then
+   if [ $(echo $ifaces|awk -F "." '{print $4}'|wc -c) -eq 2 ]; then
   type=gw
+   else
+   type=dev;ifaces=$(ip r|grep default|awk '{print $5}')
+   fi
  else
   type=dev
  fi
