@@ -127,23 +127,8 @@ killall -q sshpass openvpn autorekonek
 kill $(ps w|grep python3|grep xderm.py|awk "NR==1"|awk '{print $1}') 2>/dev/null
 kill $(ps w|grep badvpn|grep tun|awk "NR==1"|awk '{print $1}') 2>/dev/null
 rm -rf screenlog.0;sleep 1
-ifaces=$(ip r|grep default|awk '{print $3}');netuji=144.217.180.194
- if [ ! -f $(echo $ifaces|awk -F "." '{print $2}') ]; then
-   if [ $(echo $ifaces|awk -F "." '{print $4}'|wc -c) != "2" ]; then
-  ipg=$(ip r|grep default|awk '{print $3}');ifaces=$(ip r|grep default|awk '{print $5}')
-  ip route del $netuji dev $ifaces via $ipg 2>/dev/null
-  ip route del $host dev $ifaces via $ipg 2>/dev/null
-  ip route del 8.8.8.8 dev $ifaces via $ipg 2>/dev/null
-  else
-  type=gw;route del $netuji $type $ifaces 2>/dev/null
-  route del $host $type $ifaces 2>/dev/null
-  route del 8.8.8.8 $type $ifaces 2>/dev/null
-   fi
- else
-  type=dev;route del $netuji $type $ifaces 2>/dev/null
-  route del $host $type $ifaces 2>/dev/null
-  route del 8.8.8.8 $type $ifaces 2>/dev/null
- fi
+ifaces=$(ip r|grep default|awk '{print $3}');netuji=144.217.180.194;host=$(grep host /root/config.txt|awk -F "=" '{print $2}')
+route del $netuji 2>/dev/null;route del $host 2>/dev/null;route del 8.8.8.8 2>/dev/null
 }
 banner
  setup () {
@@ -159,8 +144,8 @@ echo -e "\e[31;1m Setup Selesai.\e[0m\n"
 }
  update () {
  url="https://raw.githubusercontent.com/ryanfauzi1/xderm-mini/main"
- echo -ne "\e[33;1m{$(date +%M:%S)}\e[0m Checking for update...";sleep 1
- v=$(curl -m36 $url/xderm-mini -s|grep "Current versi"|awk "NR==2"|awk '{print $6}')
+ echo -ne "\e[33;1m{$(date +%M:%S)}\e[0m Checking for update...";sleep 5
+ v=$(curl -m30 $url/xderm-mini -s|grep "Current versi"|awk "NR==2"|awk '{print $6}')
  if [ ! -f $v ]; then
   if [ "$v" != "6.5" ]; then
  echo -e "\e[36;3m (Memperbarui..)\e[0m";sleep 1
