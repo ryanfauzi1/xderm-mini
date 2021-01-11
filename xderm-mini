@@ -127,18 +127,23 @@ killall -q sshpass openvpn autorekonek
 kill $(ps w|grep python3|grep xderm.py|awk "NR==1"|awk '{print $1}') 2>/dev/null
 kill $(ps w|grep badvpn|grep tun|awk "NR==1"|awk '{print $1}') 2>/dev/null
 rm -rf screenlog.0;sleep 1
-ifaces=$(ip r|grep default|awk '{print $3}')
+ifaces=$(ip r|grep default|awk '{print $3}');netuji=144.217.180.194
  if [ ! -f $(echo $ifaces|awk -F "." '{print $2}') ]; then
    if [ $(echo $ifaces|awk -F "." '{print $4}'|wc -c) != "2" ]; then
-  ifaces=$(ip r|grep default|awk '{print $3}'|sed "s|.$(ip r|grep default|awk '{print $3}'|awk -F "." '{print $4}')|.1|g")
+  ipg=$(ip r|grep default|awk '{print $3}');ifaces=$(ip r|grep default|awk '{print $5}')
+  ip route del $netuji dev $ifaces via $ipg 2>/dev/null
+  route del $host $type $ifaces 2>/dev/null
+  route del 8.8.8.8 $type $ifaces 2>/dev/null
+  else
+  type=gw;route del $netuji $type $ifaces 2>/dev/null
+  route del $host $type $ifaces 2>/dev/null
+  route del 8.8.8.8 $type $ifaces 2>/dev/null
    fi
-  type=gw
  else
-  type=dev
+  type=dev;route del $netuji $type $ifaces 2>/dev/null
+  route del $host $type $ifaces 2>/dev/null
+  route del 8.8.8.8 $type $ifaces 2>/dev/null
  fi
-host=$(grep host /root/config.txt|awk -F "=" '{print $2}')
-route del $host $type $ifaces 2>/dev/null
-route del 8.8.8.8 $type $ifaces 2>/dev/null;sleep 1
 }
 banner
  setup () {
@@ -157,7 +162,7 @@ echo -e "\e[31;1m Setup Selesai.\e[0m\n"
  echo -ne "\e[33;1m{$(date +%M:%S)}\e[0m Checking for update...";sleep 1
  v=$(curl -m36 $url/xderm-mini -s|grep "Current versi"|awk "NR==2"|awk '{print $6}')
  if [ ! -f $v ]; then
-  if [ "$v" != "6.4" ]; then
+  if [ "$v" != "6.5" ]; then
  echo -e "\e[36;3m (Memperbarui..)\e[0m";sleep 1
  wget -O /usr/bin/xderm-mini $url/xderm-mini -q;chmod +x /usr/bin/xderm-mini
  ch=$(curl -m20 $url/changelog.txt -s)
@@ -184,16 +189,23 @@ user=$(grep user /root/config.txt|awk -F "=" '{print $2}')
 pass=$(grep pass /root/config.txt|awk -F "=" '{print $2}')
 #########################
 flush;sni=$(grep sni /root/config.txt|awk -F "=" '{print $2}')
-ifaces=$(ip r|grep default|awk '{print $3}')
+ifaces=$(ip r|grep default|awk '{print $3}');netuji=144.217.180.194;killall -q timeout
  if [ ! -f $(echo $ifaces|awk -F "." '{print $2}') ]; then
    if [ $(echo $ifaces|awk -F "." '{print $4}'|wc -c) != "2" ]; then
-  ifaces=$(ip r|grep default|awk '{print $3}'|sed "s|.$(ip r|grep default|awk '{print $3}'|awk -F "." '{print $4}')|.1|g")
+  ipg=$(ip r|grep default|awk '{print $3}');ifaces=$(ip r|grep default|awk '{print $5}')
+  ip route add $netuji dev $ifaces via $ipg 2>/dev/null
+  route add $host $type $ifaces 2>/dev/null
+  route add 8.8.8.8 $type $ifaces 2>/dev/null
+  else
+  type=gw;route add $netuji $type $ifaces 2>/dev/null
+  route add $host $type $ifaces 2>/dev/null
+  route add 8.8.8.8 $type $ifaces 2>/dev/null
    fi
-  type=gw
  else
-  type=dev
+  type=dev;route add $netuji $type $ifaces 2>/dev/null
+  route add $host $type $ifaces 2>/dev/null
+  route add 8.8.8.8 $type $ifaces 2>/dev/null
  fi
-netuji=www.smadav.net;killall -q timeout
 echo "#!/bin/bash
 sleep 10;killall -q openssl" > /tmp/timeout;screen -dmS cb bash /tmp/timeout
 echo -ne "\e[33;1m{$(date +%M:%S)}\e[0m Menguji bug SNI... "
@@ -217,9 +229,7 @@ screen -dmS gerbang badvpn-tun2socks --tundev tun0 --netif-ipaddr 10.0.0.2 --net
 ifconfig tun0 10.0.0.1 netmask 255.255.255.0
 echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Routing host SSH, IP Gateway dan dns..";sleep 1
 echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Menggunakan \e[35;1m$ifaces\e[0m sebagai Pusat sumber."
-route add $host $type $ifaces
 route add default gw 10.0.0.2 metric 0
-route add 8.8.8.8 $type $ifaces 2>/dev/null
 echo "##############################################"
 echo -e "  Host: $host\n  Port: $port\n  User: $user\n  Pass: ********\n  Port UDPgw: $pudp\n##############################################"
 echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Menjalankan SSH (di latarbelakang)....";sleep 1
@@ -303,5 +313,5 @@ echo -e "\e[38;3m xderm-mini enable\e[0m \e[34;1m(enable on boot)\e[0m"
 echo -e "\e[38;3m xderm-mini disable\e[0m \e[34;1m(disable on boot)\e[0m"
 echo -e "\e[38;3m xderm-mini update\e[0m \e[34;1m(update versi script)\e[0m\n"
 echo -e "##############################################"
-echo -e "           \e[33;1mCurrent versi 6.4 Copyright ®2021"
+echo -e "           \e[33;1mCurrent versi 6.5 Copyright ®2021"
 echo -e "           Openwrt Tunnel & Logika Bash Linux\e[0m\n"
