@@ -185,12 +185,12 @@ echo -e "\e[31;1m Setup Selesai.\e[0m\n"
 echo "mode=0" > /root/config.txt
   fi
 pudp=$(grep pudp= /root/config.txt 2>/dev/null|awk -F "=" '{print $2}')
+sni=$(grep sni= /root/config.txt 2>/dev/null|awk -F "=" '{print $2}')
 if [ $(grep mode= /root/config.txt|awk -F "=" '{print $2}') -eq 1 ]; then
  if [ -f $(v2ray -version|awk '{print $1}'|awk "NR==1") ]; then
  echo -e "Paket V2Ray belom terinstall. install dulu!\n";exit
  fi
  flush;ssa=8
-sni=$(grep sni= /root/config.txt|awk -F "=" '{print $2}')
 uuid=$(grep vmess: /root/config.txt|awk -F "//" '{print $2}'|base64 -d|grep '"id":'|awk -F ': "' '{print $2}'|awk -F '"' '{print $1}')
 host=$(grep vmess: /root/config.txt|awk -F "//" '{print $2}'|base64 -d|grep '"add":'|awk -F ': "' '{print $2}'|awk -F '"' '{print $1}')
 port=$(grep vmess: /root/config.txt|awk -F "//" '{print $2}'|base64 -d|grep '"port":'|awk -F ': "' '{print $2}'|awk -F '"' '{print $1}')
@@ -329,7 +329,7 @@ port=$(grep port= /root/config.txt|awk -F "=" '{print $2}')
 user=$(grep user= /root/config.txt|awk -F "=" '{print $2}')
 pass=$(grep pass= /root/config.txt|awk -F "=" '{print $2}')
 #########################
-flush;sni=$(grep sni= /root/config.txt|awk -F "=" '{print $2}');killall -q timeout;ifaces=$(ip r|grep default|awk '{print $3}');routing
+flush;killall -q timeout;ifaces=$(ip r|grep default|awk '{print $3}');routing
 echo "#!/bin/bash
 sleep 15;killall -q openssl" > /tmp/timeout;screen -dmS cb bash /tmp/timeout
 echo -ne "\e[33;1m{$(date +%M:%S)}\e[0m Menguji bug SNI... "
