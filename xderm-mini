@@ -353,6 +353,7 @@ else
 echo -e "\e[31;1mClosed!\e[0m";exit
  fi
 injek;echo "##############################################"
+host=$(grep host= /root/config.txt|awk -F "=" '{print $2}')
 echo -e "  Host: $host\n  Port: $port\n  User: $user\n  Pass: ********\n  Port UDPgw: $pudp\n##############################################"
 echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Menjalankan SSH (di latarbelakang)....";sleep 1
 screen -L -dmS xderm sshpass -p "$pass" ssh -oTCPKeepAlive=yes -oServerAliveInterval=180 -oServerAliveCountMax=2 -oStrictHostKeyChecking=no -CND 127.0.0.1:1080 -p $port $user@$host -o "Proxycommand=corkscrew 127.0.0.1 8789 %h %p";sleep 2
