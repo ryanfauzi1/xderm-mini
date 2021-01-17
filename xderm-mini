@@ -143,6 +143,9 @@ echo -e "      \e[35;1mXderm Mini SSL (ssh & vmess) 2021\e[0m\n\e[36;1m#########
  fi
  }
  flush () {
+if [ -f $(base64 --help 2>/dev/null|awk "NR==2"|awk '{print $1}') ]; then
+ echo -e "Paket base64 belom terinstall. install dulu!\n";exit
+ fi
 echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Membersihkan sisa sisa....";sleep 1
 killall -q sshpass openvpn autorekonek;killall -q v2ray
 kill $(ps w|grep python3|grep xderm.py|awk "NR==1"|awk '{print $1}') 2>/dev/null
