@@ -121,9 +121,25 @@ screen -dmS injek python3 /tmp/xderm.py*;sleep 1;rm -rf /tmp/xderm.py*
 echo -e "\e[36;1m##############################################\e[0m"
 echo -e "      \e[35;1mXderm Mini SSL (ssh & vmess) 2021\e[0m\n\e[36;1m##############################################\e[0m\n"
 }
+ routing () {
+ ifaces=$(ip r|grep default|awk '{print $3}')
+ if [ ! -f $(echo $ifaces|awk -F "." '{print $2}') ]; then
+   if [ $(echo $ifaces|awk -F "." '{print $4}'|wc -c) != "2" ]; then
+  ipg=$(ip r|grep default|awk '{print $3}');ifaces=$(ip r|grep default|awk '{print $5}')
+  ip route add $host dev $ifaces via $ipg 2>/dev/null
+  ip route add 8.8.8.8 $ifaces via $ipg 2>/dev/null
+  else
+  type=gw;route add $host $type $ifaces 2>/dev/null
+  route add 8.8.8.8 $type $ifaces 2>/dev/null
+   fi
+ else
+  type=dev;route add $host $type $ifaces 2>/dev/null
+  route add 8.8.8.8 $type $ifaces 2>/dev/null
+ fi
+ }
  flush () {
 echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Membersihkan sisa sisa....";sleep 1
-killall -q sshpass openvpn autorekonek
+killall -q sshpass openvpn autorekonek v2ray
 kill $(ps w|grep python3|grep xderm.py|awk "NR==1"|awk '{print $1}') 2>/dev/null
 kill $(ps w|grep badvpn|grep tun|awk "NR==1"|awk '{print $1}') 2>/dev/null
 rm -rf screenlog.0;sleep 1
@@ -174,7 +190,7 @@ if [ $(grep mode= /root/config.txt|awk -F "=" '{print $2}') -eq 1 ]; then
  fi
  ssa=8;pudp=$(grep pudp= /root/config.txt|awk -F "=" '{print $2}')
 uuid=$(grep vmess: /root/config.txt|awk -F "//" '{print $2}'|base64 -d|grep '"id":'|awk -F ': "' '{print $2}'|awk -F '"' '{print $1}')
-add=$(grep vmess: /root/config.txt|awk -F "//" '{print $2}'|base64 -d|grep '"add":'|awk -F ': "' '{print $2}'|awk -F '"' '{print $1}')
+host=$(grep vmess: /root/config.txt|awk -F "//" '{print $2}'|base64 -d|grep '"add":'|awk -F ': "' '{print $2}'|awk -F '"' '{print $1}')
 port=$(grep vmess: /root/config.txt|awk -F "//" '{print $2}'|base64 -d|grep '"port":'|awk -F ': "' '{print $2}'|awk -F '"' '{print $1}')
 aid=$(grep vmess: /root/config.txt|awk -F "//" '{print $2}'|base64 -d|grep '"aid":'|awk -F ': "' '{print $2}'|awk -F '"' '{print $1}')
 net=$(grep vmess: /root/config.txt|awk -F "//" '{print $2}'|base64 -d|grep '"net":'|awk -F ': "' '{print $2}'|awk -F '"' '{print $1}')
@@ -217,7 +233,7 @@ echo "{
       \"settings\": {
         \"vnext\": [
           {
-            \"address\": \"$add\",
+            \"address\": \"$host\",
             \"port\": $port,
             \"users\": [
               {
@@ -300,7 +316,7 @@ echo "{
     ]
   }
 }" > /usr/local/etc/v2ray/config.json
-screen -dmS pimes v2ray -config /usr/local/etc/v2ray/config.json
+screen -dmS pimes v2ray -config /usr/local/etc/v2ray/config.json;routing
 echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Menjalankan VMESS (di latarbelakang)....";sleep 1
 elif [ $(grep mode= /root/config.txt|awk -F "=" '{print $2}') -eq 0 ]; then
 ssa=;host=$(grep host= /root/config.txt|awk -F "=" '{print $2}')
@@ -311,24 +327,7 @@ port=$(grep port= /root/config.txt|awk -F "=" '{print $2}')
 user=$(grep user= /root/config.txt|awk -F "=" '{print $2}')
 pass=$(grep pass= /root/config.txt|awk -F "=" '{print $2}')
 #########################
-flush;sni=$(grep sni= /root/config.txt|awk -F "=" '{print $2}')
-ifaces=$(ip r|grep default|awk '{print $3}');netuji=www.smadav.net;killall -q timeout
- if [ ! -f $(echo $ifaces|awk -F "." '{print $2}') ]; then
-   if [ $(echo $ifaces|awk -F "." '{print $4}'|wc -c) != "2" ]; then
-  ipg=$(ip r|grep default|awk '{print $3}');ifaces=$(ip r|grep default|awk '{print $5}')
-  ip route add $netuji dev $ifaces via $ipg 2>/dev/null
-  ip route add $host dev $ifaces via $ipg 2>/dev/null
-  ip route add 8.8.8.8 $ifaces via $ipg 2>/dev/null
-  else
-  type=gw;route add $netuji $type $ifaces 2>/dev/null
-  route add $host $type $ifaces 2>/dev/null
-  route add 8.8.8.8 $type $ifaces 2>/dev/null
-   fi
- else
-  type=dev;route add $netuji $type $ifaces 2>/dev/null
-  route add $host $type $ifaces 2>/dev/null
-  route add 8.8.8.8 $type $ifaces 2>/dev/null
- fi
+flush;sni=$(grep sni= /root/config.txt|awk -F "=" '{print $2}');killall -q timeout;routing
 echo "#!/bin/bash
 sleep 15;killall -q openssl" > /tmp/timeout;screen -dmS cb bash /tmp/timeout
 echo -ne "\e[33;1m{$(date +%M:%S)}\e[0m Menguji bug SNI... "
@@ -336,7 +335,7 @@ echo -ne "\e[33;1m{$(date +%M:%S)}\e[0m Menguji bug SNI... "
 echo -e "\n -\e[31;1mtidak ada paket openssl, install dulu!\e[0m \n"
 route del $netuji 2>/dev/null;exit
  fi
-supp=$(echo "QUIT"|openssl s_client -connect $netuji:443 -servername $sni 2>/dev/null|grep supp|awk '{print $4}')
+supp=$(echo "QUIT"|openssl s_client -connect www.smadav.net:443 -servername $sni 2>/dev/null|grep supp|awk '{print $4}')
  if [ ! -f $supp ]; then
 echo -e "\e[32;1mOK\e[0m"
 else
