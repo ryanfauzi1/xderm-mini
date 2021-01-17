@@ -201,6 +201,8 @@ aid=$(grep vmess: /root/config.txt|awk -F "//" '{print $2}'|base64 -d|grep '"aid
 net=$(grep vmess: /root/config.txt|awk -F "//" '{print $2}'|base64 -d|grep '"net":'|awk -F ': "' '{print $2}'|awk -F '"' '{print $1}')
 tls=$(grep vmess: /root/config.txt|awk -F "//" '{print $2}'|base64 -d|grep '"tls":'|awk -F ': "' '{print $2}'|awk -F '"' '{print $1}')
 path=$(grep vmess: /root/config.txt|awk -F "//" '{print $2}'|base64 -d|grep '"path":'|awk -F ': "' '{print $2}'|awk -F '"' '{print $1}')
+ echo "##############################################"
+echo -e "  Host: $host\n  Port: $port\n  ID: $uuid\n  Net: $net\n  Path: $path\n  Port UDPgw: $pudp\n##############################################"
 echo "{
   \"policy\": null,
   \"log\": {
