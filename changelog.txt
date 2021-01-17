@@ -1,5 +1,4 @@
      - Changelog:
-     - fix all error & add new fiturs!
      - add v2ray vmess !!
      - notif ini tampil jika update sukses
      - UPDATED xderm versi 6.7
