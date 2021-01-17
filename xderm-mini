@@ -125,7 +125,18 @@ echo -e "      \e[35;1mXderm Mini SSL (ssh & vmess) 2021\e[0m\n\e[36;1m#########
   if [ $mode -eq 0 ]; then
   host=$(grep host= /root/config.txt|awk -F "=" '{print $2}')
   else
-  host=$(grep vmess: /root/config.txt|awk -F "//" '{print $2}'|base64 -d|grep '"add":'|awk -F ': "' '{print $2}'|awk -F '"' '{print $1}')
+   versi=1;port=$(grep vmess: /root/config.txt 2>/dev/null|awk -F "//" '{print $2}'|base64 -d|grep '"port":'|awk -F ': "' '{print $2}'|awk -F '"' '{print $1}')
+   if [ -f $port ]; then
+   versi=2;port=$(grep vmess: /root/config.txt 2>/dev/null|awk -F "//" '{print $2}'|base64 -d|awk -F 'port":"' '{print $2}'|awk -F '"' '{print $1}'|awk "NR==1")
+    if [ -f $port ]; then
+   echo -e "Akun vmess belom disetting!\n";exit
+    fi
+   fi
+    if [ $versi -eq 2 ]; then
+    host=$(grep vmess: /root/config.txt 2>/dev/null|awk -F "//" '{print $2}'|base64 -d|awk -F '"add":"' '{print $2}'|awk -F '"' '{print $1}'|awk "NR==1")
+    else
+    host=$(grep vmess: /root/config.txt|awk -F "//" '{print $2}'|base64 -d|grep '"add":'|awk -F ': "' '{print $2}'|awk -F '"' '{print $1}')
+    fi
   fi
  ifaces=$(ip r|grep default|awk '{print $3}')
  if [ ! -f $(echo $ifaces|awk -F "." '{print $2}') ]; then
@@ -172,7 +183,7 @@ echo -e "\e[31;1m Setup Selesai.\e[0m\n"
  sleep 4
  v=$(curl -m21 $url/xderm-mini -s|grep "Current versi"|awk "NR==2"|awk '{print $6}')
  if [ ! -f $v ]; then
-  if [ "$v" != "6.8" ]; then
+  if [ "$v" != "6.9" ]; then
  echo -e "\e[36;3m (Memperbarui..)\e[0m";sleep 1
  wget -O /usr/bin/xderm-mini $url/xderm-mini -q;chmod +x /usr/bin/xderm-mini
  ch=$(curl -m20 $url/changelog.txt -s)
@@ -207,17 +218,29 @@ if [ $mode -eq 1 ]; then
  echo -e "Paket base64 belom terinstall. install dulu!\n";exit
  fi
  flush;ssa=8;echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Mode yang dipilih: \e[32;1m$mode\e[0m"
- port=$(grep vmess: /root/config.txt 2>/dev/null|awk -F "//" '{print $2}'|base64 -d|grep '"port":'|awk -F ': "' '{print $2}'|awk -F '"' '{print $1}')
+ versi=1;port=$(grep vmess: /root/config.txt 2>/dev/null|awk -F "//" '{print $2}'|base64 -d|grep '"port":'|awk -F ': "' '{print $2}'|awk -F '"' '{print $1}')
   if [ -f $port ]; then
+ versi=2;port=$(grep vmess: /root/config.txt 2>/dev/null|awk -F "//" '{print $2}'|base64 -d|awk -F 'port":"' '{print $2}'|awk -F '"' '{print $1}'|awk "NR==1")
+    if [ -f $port ]; then
  echo -e "Akun vmess belom disetting!\n";exit
+    fi
   fi
 mkdir -p /usr/local/etc/v2ray/
+ if [ $versi -eq 2 ]; then
+uuid=$(grep vmess: /root/config.txt 2>/dev/null|awk -F "//" '{print $2}'|base64 -d|awk -F '"id":"' '{print $2}'|awk -F '"' '{print $1}'|awk "NR==1")
+host=$(grep vmess: /root/config.txt 2>/dev/null|awk -F "//" '{print $2}'|base64 -d|awk -F '"add":"' '{print $2}'|awk -F '"' '{print $1}'|awk "NR==1")
+aid=$(grep vmess: /root/config.txt 2>/dev/null|awk -F "//" '{print $2}'|base64 -d|awk -F '"aid":"' '{print $2}'|awk -F '"' '{print $1}'|awk "NR==1")
+net=$(grep vmess: /root/config.txt 2>/dev/null|awk -F "//" '{print $2}'|base64 -d|awk -F '"net":"' '{print $2}'|awk -F '"' '{print $1}'|awk "NR==1")
+tls=$(grep vmess: /root/config.txt 2>/dev/null|awk -F "//" '{print $2}'|base64 -d|awk -F '"tls":"' '{print $2}'|awk -F '"' '{print $1}'|awk "NR==1")
+path=$(grep vmess: /root/config.txt 2>/dev/null|awk -F "//" '{print $2}'|base64 -d|awk -F '"path":"' '{print $2}'|awk -F '"' '{print $1}'|awk "NR==1")
+else
 uuid=$(grep vmess: /root/config.txt|awk -F "//" '{print $2}'|base64 -d|grep '"id":'|awk -F ': "' '{print $2}'|awk -F '"' '{print $1}')
 host=$(grep vmess: /root/config.txt|awk -F "//" '{print $2}'|base64 -d|grep '"add":'|awk -F ': "' '{print $2}'|awk -F '"' '{print $1}')
 aid=$(grep vmess: /root/config.txt|awk -F "//" '{print $2}'|base64 -d|grep '"aid":'|awk -F ': "' '{print $2}'|awk -F '"' '{print $1}')
 net=$(grep vmess: /root/config.txt|awk -F "//" '{print $2}'|base64 -d|grep '"net":'|awk -F ': "' '{print $2}'|awk -F '"' '{print $1}')
 tls=$(grep vmess: /root/config.txt|awk -F "//" '{print $2}'|base64 -d|grep '"tls":'|awk -F ': "' '{print $2}'|awk -F '"' '{print $1}')
 path=$(grep vmess: /root/config.txt|awk -F "//" '{print $2}'|base64 -d|grep '"path":'|awk -F ': "' '{print $2}'|awk -F '"' '{print $1}')
+ fi
  echo "##############################################"
 echo -e "  Host: $host\n  Port: $port\n  ID: $uuid\n  Net: $net\n  Path: $path\n  Port UDPgw: $pudp\n##############################################"
 echo "{
@@ -461,5 +484,5 @@ echo -e "\e[38;3m xderm-mini enable\e[0m \e[34;1m(enable on boot)\e[0m"
 echo -e "\e[38;3m xderm-mini disable\e[0m \e[34;1m(disable on boot)\e[0m"
 echo -e "\e[38;3m xderm-mini update\e[0m \e[34;1m(update versi script)\e[0m\n"
 echo -e "##############################################"
-echo -e "           \e[33;1mCurrent versi 6.8 Copyright ®2021"
+echo -e "           \e[33;1mCurrent versi 6.9 Copyright ®2021"
 echo -e "           Openwrt Tunnel & Logika Bash Linux\e[0m\n"
