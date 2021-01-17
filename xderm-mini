@@ -188,7 +188,7 @@ echo -e "\e[31;1m Setup Selesai.\e[0m\n"
  start () {
 #########################
   if [ -f $(grep mode= /root/config.txt|awk -F "=" '{print $2}') ]; then
-echo "mode=0" > /root/config.txt
+echo "mode=0" >> /root/config.txt
   fi
 pudp=$(grep pudp= /root/config.txt 2>/dev/null|awk -F "=" '{print $2}')
 sni=$(grep sni= /root/config.txt 2>/dev/null|awk -F "=" '{print $2}')
