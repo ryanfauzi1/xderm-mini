@@ -200,6 +200,9 @@ if [ $mode -eq 1 ]; then
  if [ -f $(v2ray -version 2>/dev/null|awk '{print $1}'|awk "NR==1") ]; then
  echo -e "Paket V2Ray belom terinstall. install dulu!\n";exit
  fi
+ if [ -f $(base64 --help 2>/dev/null|awk "NR==2"|awk '{print $1}') ]; then
+ echo -e "Paket base64 belom terinstall. install dulu!\n";exit
+ fi
  flush;ssa=8;echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Mode yang dipilih: \e[32;1m$mode\e[0m"
  port=$(grep vmess: /root/config.txt 2>/dev/null|awk -F "//" '{print $2}'|base64 -d|grep '"port":'|awk -F ': "' '{print $2}'|awk -F '"' '{print $1}')
   if [ -f $port ]; then
