@@ -330,7 +330,6 @@ echo "{
 screen -dmS pimes v2ray -config /usr/local/etc/v2ray/config.json;routing
 echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Menjalankan VMESS (di latarbelakang)....";sleep 1
 elif [ $(grep mode= /root/config.txt|awk -F "=" '{print $2}') -eq 0 ]; then
-echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Mode yang dipilih: \e[32;1m$mode\e[0m"
 ssa=;host=$(grep host= /root/config.txt|awk -F "=" '{print $2}')
  if [ -f $host ]; then
 echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Config belom disetting !!\n";sleep 1;exit
@@ -340,12 +339,12 @@ user=$(grep user= /root/config.txt|awk -F "=" '{print $2}')
 pass=$(grep pass= /root/config.txt|awk -F "=" '{print $2}')
 #########################
 flush;killall -q timeout;ifaces=$(ip r|grep default|awk '{print $3}');routing
+echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Mode yang dipilih: \e[32;1m$mode\e[0m"
 echo "#!/bin/bash
 sleep 15;killall -q openssl" > /tmp/timeout;screen -dmS cb bash /tmp/timeout
 echo -ne "\e[33;1m{$(date +%M:%S)}\e[0m Menguji bug SNI... "
  if [ -f $(echo "exit"|openssl 2>/dev/null) ]; then
-echo -e "\n -\e[31;1mtidak ada paket openssl, install dulu!\e[0m \n"
-route del $netuji 2>/dev/null;exit
+echo -e "\n -\e[31;1mtidak ada paket openssl, install dulu!\e[0m \n";exit
  fi
 supp=$(echo "QUIT"|openssl s_client -connect www.smadav.net:443 -servername $sni 2>/dev/null|grep supp|awk '{print $4}')
  if [ ! -f $supp ]; then
@@ -353,8 +352,7 @@ echo -e "\e[32;1mOK\e[0m"
 else
 echo -e "\e[31;1mClosed!\e[0m";exit
  fi
-route del $netuji 2>/dev/null;injek
-echo "##############################################"
+injek;echo "##############################################"
 echo -e "  Host: $host\n  Port: $port\n  User: $user\n  Pass: ********\n  Port UDPgw: $pudp\n##############################################"
 echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Menjalankan SSH (di latarbelakang)....";sleep 1
 screen -L -dmS xderm sshpass -p "$pass" ssh -oTCPKeepAlive=yes -oServerAliveInterval=180 -oServerAliveCountMax=2 -oStrictHostKeyChecking=no -CND 127.0.0.1:1080 -p $port $user@$host -o "Proxycommand=corkscrew 127.0.0.1 8789 %h %p";sleep 2
