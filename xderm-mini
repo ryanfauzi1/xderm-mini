@@ -186,14 +186,15 @@ echo "mode=0" > /root/config.txt
   fi
 pudp=$(grep pudp= /root/config.txt 2>/dev/null|awk -F "=" '{print $2}')
 sni=$(grep sni= /root/config.txt 2>/dev/null|awk -F "=" '{print $2}')
+mode=$(grep mode= /root/config.txt|awk -F "=" '{print $2}')
    if [ -f $(badvpn-tun2socks -version 2>/dev/null|awk '{print $1}'|awk "NR==1") ]; then
     echo -e "Paket badvpn-tun2socks belom terinstall. install dulu!\n";exit
    fi   
-if [ $(grep mode= /root/config.txt|awk -F "=" '{print $2}') -eq 1 ]; then
+if [ $mode -eq 1 ]; then
  if [ -f $(v2ray -version 2>/dev/null|awk '{print $1}'|awk "NR==1") ]; then
  echo -e "Paket V2Ray belom terinstall. install dulu!\n";exit
  fi
- flush;ssa=8
+ flush;ssa=8;echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Mode yang dipilih: $mode"
 uuid=$(grep vmess: /root/config.txt|awk -F "//" '{print $2}'|base64 -d|grep '"id":'|awk -F ': "' '{print $2}'|awk -F '"' '{print $1}')
 host=$(grep vmess: /root/config.txt|awk -F "//" '{print $2}'|base64 -d|grep '"add":'|awk -F ': "' '{print $2}'|awk -F '"' '{print $1}')
 port=$(grep vmess: /root/config.txt|awk -F "//" '{print $2}'|base64 -d|grep '"port":'|awk -F ': "' '{print $2}'|awk -F '"' '{print $1}')
@@ -326,6 +327,7 @@ echo "{
 screen -dmS pimes v2ray -config /usr/local/etc/v2ray/config.json;routing
 echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Menjalankan VMESS (di latarbelakang)....";sleep 1
 elif [ $(grep mode= /root/config.txt|awk -F "=" '{print $2}') -eq 0 ]; then
+echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Mode yang dipilih: $mode"
 ssa=;host=$(grep host= /root/config.txt|awk -F "=" '{print $2}')
  if [ -f $host ]; then
 echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Config belom disetting !!\n";sleep 1;exit
