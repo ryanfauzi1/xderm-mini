@@ -143,8 +143,8 @@ killall -q sshpass openvpn autorekonek;killall -q v2ray
 kill $(ps w|grep python3|grep xderm.py|awk "NR==1"|awk '{print $1}') 2>/dev/null
 kill $(ps w|grep badvpn|grep tun|awk "NR==1"|awk '{print $1}') 2>/dev/null
 rm -rf screenlog.0;sleep 1
-netuji=www.smadav.net;host=$(grep host /root/config.txt|awk -F "=" '{print $2}')
-route del $host 2>/dev/null;route del 8.8.8.8 2>/dev/null
+host=$(grep host /root/config.txt|awk -F "=" '{print $2}');route del $host 2>/dev/null;route del 8.8.8.8 2>/dev/null
+host=$(grep vmess: /root/config.txt 2>/dev/null|awk -F "//" '{print $2}'|base64 -d|grep '"add":'|awk -F ': "' '{print $2}'|awk -F '"' '{print $1}');route del $host 2>/dev/null
 }
 banner
  setup () {
@@ -194,10 +194,13 @@ if [ $mode -eq 1 ]; then
  if [ -f $(v2ray -version 2>/dev/null|awk '{print $1}'|awk "NR==1") ]; then
  echo -e "Paket V2Ray belom terinstall. install dulu!\n";exit
  fi
- flush;ssa=8;echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Mode yang dipilih: $mode"
+ flush;ssa=8;echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Mode yang dipilih: \e[32;1m$mode\e[0m"
+ port=$(grep vmess: /root/config.txt 2>/dev/null|awk -F "//" '{print $2}'|base64 -d|grep '"port":'|awk -F ': "' '{print $2}'|awk -F '"' '{print $1}')
+  if [ -f $port ]; then
+ echo -e "Akun vmess belom disetting!\n";exit
+  fi
 uuid=$(grep vmess: /root/config.txt|awk -F "//" '{print $2}'|base64 -d|grep '"id":'|awk -F ': "' '{print $2}'|awk -F '"' '{print $1}')
 host=$(grep vmess: /root/config.txt|awk -F "//" '{print $2}'|base64 -d|grep '"add":'|awk -F ': "' '{print $2}'|awk -F '"' '{print $1}')
-port=$(grep vmess: /root/config.txt|awk -F "//" '{print $2}'|base64 -d|grep '"port":'|awk -F ': "' '{print $2}'|awk -F '"' '{print $1}')
 aid=$(grep vmess: /root/config.txt|awk -F "//" '{print $2}'|base64 -d|grep '"aid":'|awk -F ': "' '{print $2}'|awk -F '"' '{print $1}')
 net=$(grep vmess: /root/config.txt|awk -F "//" '{print $2}'|base64 -d|grep '"net":'|awk -F ': "' '{print $2}'|awk -F '"' '{print $1}')
 tls=$(grep vmess: /root/config.txt|awk -F "//" '{print $2}'|base64 -d|grep '"tls":'|awk -F ': "' '{print $2}'|awk -F '"' '{print $1}')
@@ -327,7 +330,7 @@ echo "{
 screen -dmS pimes v2ray -config /usr/local/etc/v2ray/config.json;routing
 echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Menjalankan VMESS (di latarbelakang)....";sleep 1
 elif [ $(grep mode= /root/config.txt|awk -F "=" '{print $2}') -eq 0 ]; then
-echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Mode yang dipilih: $mode"
+echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Mode yang dipilih: \e[32;1m$mode\e[0m"
 ssa=;host=$(grep host= /root/config.txt|awk -F "=" '{print $2}')
  if [ -f $host ]; then
 echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Config belom disetting !!\n";sleep 1;exit
