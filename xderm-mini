@@ -139,12 +139,12 @@ echo -e "      \e[35;1mXderm Mini SSL (ssh & vmess) 2021\e[0m\n\e[36;1m#########
  }
  flush () {
 echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Membersihkan sisa sisa....";sleep 1
-killall -q sshpass openvpn autorekonek v2ray
+killall -q sshpass openvpn autorekonek;killall -q v2ray
 kill $(ps w|grep python3|grep xderm.py|awk "NR==1"|awk '{print $1}') 2>/dev/null
 kill $(ps w|grep badvpn|grep tun|awk "NR==1"|awk '{print $1}') 2>/dev/null
 rm -rf screenlog.0;sleep 1
-ifaces=$(ip r|grep default|awk '{print $3}');netuji=144.217.180.194;host=$(grep host /root/config.txt|awk -F "=" '{print $2}')
-route del $netuji 2>/dev/null;route del $host 2>/dev/null;route del 8.8.8.8 2>/dev/null
+netuji=www.smadav.net;host=$(grep host /root/config.txt|awk -F "=" '{print $2}')
+route del $host 2>/dev/null;route del 8.8.8.8 2>/dev/null
 }
 banner
  setup () {
@@ -327,7 +327,7 @@ port=$(grep port= /root/config.txt|awk -F "=" '{print $2}')
 user=$(grep user= /root/config.txt|awk -F "=" '{print $2}')
 pass=$(grep pass= /root/config.txt|awk -F "=" '{print $2}')
 #########################
-flush;sni=$(grep sni= /root/config.txt|awk -F "=" '{print $2}');killall -q timeout;routing
+flush;sni=$(grep sni= /root/config.txt|awk -F "=" '{print $2}');killall -q timeout;ifaces=$(ip r|grep default|awk '{print $3}');routing
 echo "#!/bin/bash
 sleep 15;killall -q openssl" > /tmp/timeout;screen -dmS cb bash /tmp/timeout
 echo -ne "\e[33;1m{$(date +%M:%S)}\e[0m Menguji bug SNI... "
@@ -381,8 +381,8 @@ iptables -A POSTROUTING --proto tcp -t nat -o tun0 -j MASQUERADE
 pudp=$(grep pudp /root/config.txt|awk -F "=" '{print $2}')
 screen -dmS gerbang badvpn-tun2socks --tundev tun0 --netif-ipaddr 10.0.0.2 --netif-netmask 255.255.255.0 --socks-server-addr 127.0.0.1:1080$ssa --udpgw-remote-server-addr 127.0.0.1:$pudp --udpgw-transparent-dns --loglevel 0;sleep 4
 ifconfig tun0 10.0.0.1 netmask 255.255.255.0
+echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Menggunakan \e[35;1m$ifaces\e[0m sebagai Pusat sumber.";sleep 1
 echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Routing host SSH, IP Gateway dan dns..";sleep 1
-echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Menggunakan \e[35;1m$ifaces\e[0m sebagai Pusat sumber."
 route add default gw 10.0.0.2 metric 0;sleep 1
 update
 }
