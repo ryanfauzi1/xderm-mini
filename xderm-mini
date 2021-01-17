@@ -186,8 +186,11 @@ echo "mode=0" > /root/config.txt
   fi
 pudp=$(grep pudp= /root/config.txt 2>/dev/null|awk -F "=" '{print $2}')
 sni=$(grep sni= /root/config.txt 2>/dev/null|awk -F "=" '{print $2}')
+   if [ -f $(badvpn-tun2socks -version 2>/dev/null|awk '{print $1}'|awk "NR==1") ]; then
+    echo -e "Paket badvpn-tun2socks belom terinstall. install dulu!\n";exit
+   fi   
 if [ $(grep mode= /root/config.txt|awk -F "=" '{print $2}') -eq 1 ]; then
- if [ -f $(v2ray -version|awk '{print $1}'|awk "NR==1") ]; then
+ if [ -f $(v2ray -version 2>/dev/null|awk '{print $1}'|awk "NR==1") ]; then
  echo -e "Paket V2Ray belom terinstall. install dulu!\n";exit
  fi
  flush;ssa=8
