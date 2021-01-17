@@ -2,7 +2,7 @@
 #xderm_mini2021_stable1
 clear
  injek () {
-sni=$(grep sni /root/config.txt|awk -F "=" '{print $2}')
+sni=$(grep sni= /root/config.txt|awk -F "=" '{print $2}')
 echo "#!/usr/bin/python
 import re
 import ssl
@@ -119,7 +119,7 @@ screen -dmS injek python3 /tmp/xderm.py*;sleep 1;rm -rf /tmp/xderm.py*
 }
  banner () {
 echo -e "\e[36;1m##############################################\e[0m"
-echo -e "           \e[35;1mXderm Mini SSH SSL 2021\e[0m\n\e[36;1m##############################################\e[0m\n"
+echo -e "      \e[35;1mXderm Mini SSL (ssh & vmess) 2021\e[0m\n\e[36;1m##############################################\e[0m\n"
 }
  flush () {
 echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Membersihkan sisa sisa....";sleep 1
@@ -165,16 +165,154 @@ echo -e "\e[31;1m Setup Selesai.\e[0m\n"
   }
  start () {
 #########################
-host=$(grep host /root/config.txt|awk -F "=" '{print $2}')
+  if [ -f $(grep mode= /root/config.txt|awk -F "=" '{print $2}') ]; then
+echo "mode=0" > /root/config.txt
+  fi
+if [ $(grep mode= /root/config.txt|awk -F "=" '{print $2}') -eq 1 ]; then
+ if [ -f $(v2ray -version|awk '{print $1}'|awk "NR==1") ]; then
+ echo -e "Paket V2Ray belom terinstall. install dulu!\n";exit
+ fi
+ ssa=8;pudp=$(grep pudp= /root/config.txt|awk -F "=" '{print $2}')
+uuid=$(grep vmess: /root/config.txt|awk -F "//" '{print $2}'|base64 -d|grep '"id":'|awk -F ': "' '{print $2}'|awk -F '"' '{print $1}')
+add=$(grep vmess: /root/config.txt|awk -F "//" '{print $2}'|base64 -d|grep '"add":'|awk -F ': "' '{print $2}'|awk -F '"' '{print $1}')
+port=$(grep vmess: /root/config.txt|awk -F "//" '{print $2}'|base64 -d|grep '"port":'|awk -F ': "' '{print $2}'|awk -F '"' '{print $1}')
+aid=$(grep vmess: /root/config.txt|awk -F "//" '{print $2}'|base64 -d|grep '"aid":'|awk -F ': "' '{print $2}'|awk -F '"' '{print $1}')
+net=$(grep vmess: /root/config.txt|awk -F "//" '{print $2}'|base64 -d|grep '"net":'|awk -F ': "' '{print $2}'|awk -F '"' '{print $1}')
+tls=$(grep vmess: /root/config.txt|awk -F "//" '{print $2}'|base64 -d|grep '"tls":'|awk -F ': "' '{print $2}'|awk -F '"' '{print $1}')
+path=$(grep vmess: /root/config.txt|awk -F "//" '{print $2}'|base64 -d|grep '"path":'|awk -F ': "' '{print $2}'|awk -F '"' '{print $1}')
+echo "{
+  \"policy\": null,
+  \"log\": {
+    \"access\": \"\",
+    \"error\": \"\",
+    \"loglevel\": \"none\"
+  },
+  \"inbounds\": [
+    {
+      \"tag\": \"proxy\",
+      \"port\": 10808,
+      \"listen\": \"127.0.0.1\",
+      \"protocol\": \"socks\",
+      \"sniffing\": {
+        \"enabled\": false,
+        \"destOverride\": [
+          \"http\",
+          \"tls\"
+        ]
+      },
+      \"settings\": {
+        \"auth\": \"noauth\",
+        \"udp\": true,
+        \"ip\": null,
+        \"address\": null,
+        \"clients\": null
+      },
+      \"streamSettings\": null
+    }
+  ],
+  \"outbounds\": [
+    {
+      \"tag\": \"proxy\",
+      \"protocol\": \"vmess\",
+      \"settings\": {
+        \"vnext\": [
+          {
+            \"address\": \"$add\",
+            \"port\": $port,
+            \"users\": [
+              {
+                \"id\": \"$uuid\",
+                \"alterId\": $aid,
+                \"email\": \"t@t.tt\",
+                \"security\": \"auto\"
+              }
+            ]
+          }
+        ],
+        \"servers\": null,
+        \"response\": null
+      },
+      \"streamSettings\": {
+        \"network\": \"$net\",
+        \"security\": \"$tls\",
+        \"tlsSettings\": {
+          \"allowInsecure\": true,
+          \"serverName\": \"$sni\"
+        },
+        \"tcpSettings\": null,
+        \"kcpSettings\": null,
+        \"wsSettings\": {
+          \"connectionReuse\": true,
+          \"path\": \"$path\",
+          \"headers\": {
+            \"Host\": \"$sni\"
+          }
+        },
+        \"httpSettings\": null,
+        \"quicSettings\": null
+      },
+      \"mux\": {
+        \"enabled\": true,
+        \"concurrency\": 8
+      }
+    },
+    {
+      \"tag\": \"direct\",
+      \"protocol\": \"freedom\",
+      \"settings\": {
+        \"vnext\": null,
+        \"servers\": null,
+        \"response\": null
+      },
+      \"streamSettings\": null,
+      \"mux\": null
+    },
+    {
+      \"tag\": \"block\",
+      \"protocol\": \"blackhole\",
+      \"settings\": {
+        \"vnext\": null,
+        \"servers\": null,
+        \"response\": {
+          \"type\": \"http\"
+        }
+      },
+      \"streamSettings\": null,
+      \"mux\": null
+    }
+  ],
+  \"stats\": null,
+  \"api\": null,
+  \"dns\": null,
+  \"routing\": {
+    \"domainStrategy\": \"IPIfNonMatch\",
+    \"rules\": [
+      {
+        \"type\": \"field\",
+        \"port\": null,
+        \"inboundTag\": [
+          \"api\"
+        ],
+        \"outboundTag\": \"api\",
+        \"ip\": null,
+        \"domain\": null
+      }
+    ]
+  }
+}" > /usr/local/etc/v2ray/config.json
+screen -dmS pimes v2ray -config /usr/local/etc/v2ray/config.json
+echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Menjalankan VMESS (di latarbelakang)....";sleep 1
+elif [ $(grep mode= /root/config.txt|awk -F "=" '{print $2}') -eq 0 ]; then
+ssa=;host=$(grep host= /root/config.txt|awk -F "=" '{print $2}')
  if [ -f $host ]; then
 echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Config belom disetting !!\n";sleep 1;exit
  fi
-port=$(grep port /root/config.txt|awk -F "=" '{print $2}')
-user=$(grep user /root/config.txt|awk -F "=" '{print $2}')
-pass=$(grep pass /root/config.txt|awk -F "=" '{print $2}')
+port=$(grep port= /root/config.txt|awk -F "=" '{print $2}')
+user=$(grep user= /root/config.txt|awk -F "=" '{print $2}')
+pass=$(grep pass= /root/config.txt|awk -F "=" '{print $2}')
 #########################
-flush;sni=$(grep sni /root/config.txt|awk -F "=" '{print $2}')
-ifaces=$(ip r|grep default|awk '{print $3}');netuji=144.217.180.194;killall -q timeout
+flush;sni=$(grep sni= /root/config.txt|awk -F "=" '{print $2}')
+ifaces=$(ip r|grep default|awk '{print $3}');netuji=www.smadav.net;killall -q timeout
  if [ ! -f $(echo $ifaces|awk -F "." '{print $2}') ]; then
    if [ $(echo $ifaces|awk -F "." '{print $4}'|wc -c) != "2" ]; then
   ipg=$(ip r|grep default|awk '{print $3}');ifaces=$(ip r|grep default|awk '{print $5}')
@@ -192,7 +330,7 @@ ifaces=$(ip r|grep default|awk '{print $3}');netuji=144.217.180.194;killall -q t
   route add 8.8.8.8 $type $ifaces 2>/dev/null
  fi
 echo "#!/bin/bash
-sleep 10;killall -q openssl" > /tmp/timeout;screen -dmS cb bash /tmp/timeout
+sleep 15;killall -q openssl" > /tmp/timeout;screen -dmS cb bash /tmp/timeout
 echo -ne "\e[33;1m{$(date +%M:%S)}\e[0m Menguji bug SNI... "
  if [ -f $(echo "exit"|openssl 2>/dev/null) ]; then
 echo -e "\n -\e[31;1mtidak ada paket openssl, install dulu!\e[0m \n"
@@ -205,16 +343,6 @@ else
 echo -e "\e[31;1mClosed!\e[0m";exit
  fi
 route del $netuji 2>/dev/null;injek
-echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Menjalankan Badvpn-tun2socks....";sleep 1
-  if [ -f $(iptables -t nat  -L|grep MASQ|grep tcp|awk '{print $1}') ]; then
-iptables -A POSTROUTING --proto tcp -t nat -o tun0 -j MASQUERADE
-  fi
-pudp=$(grep pudp /root/config.txt|awk -F "=" '{print $2}')
-screen -dmS gerbang badvpn-tun2socks --tundev tun0 --netif-ipaddr 10.0.0.2 --netif-netmask 255.255.255.0 --socks-server-addr 127.0.0.1:1080 --udpgw-remote-server-addr 127.0.0.1:$pudp --udpgw-transparent-dns --loglevel 0;sleep 4
-ifconfig tun0 10.0.0.1 netmask 255.255.255.0
-echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Routing host SSH, IP Gateway dan dns..";sleep 1
-echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Menggunakan \e[35;1m$ifaces\e[0m sebagai Pusat sumber."
-route add default gw 10.0.0.2 metric 0
 echo "##############################################"
 echo -e "  Host: $host\n  Port: $port\n  User: $user\n  Pass: ********\n  Port UDPgw: $pudp\n##############################################"
 echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Menjalankan SSH (di latarbelakang)....";sleep 1
@@ -245,6 +373,18 @@ screen -dmS xdermr sshpass -p \"$pass\" ssh -oTCPKeepAlive=yes -oServerAliveInte
 sleep 1
 done" > /tmp/autorekonek;cd /tmp;chmod +x autorekonek
 screen -dmS auto ./autorekonek;sleep 2;rm -rf autorekonek
+fi
+############################################################
+echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Menjalankan Badvpn-tun2socks....";sleep 1
+  if [ -f $(iptables -t nat  -L|grep MASQ|grep tcp|awk '{print $1}') ]; then
+iptables -A POSTROUTING --proto tcp -t nat -o tun0 -j MASQUERADE
+  fi
+pudp=$(grep pudp /root/config.txt|awk -F "=" '{print $2}')
+screen -dmS gerbang badvpn-tun2socks --tundev tun0 --netif-ipaddr 10.0.0.2 --netif-netmask 255.255.255.0 --socks-server-addr 127.0.0.1:1080$ssa --udpgw-remote-server-addr 127.0.0.1:$pudp --udpgw-transparent-dns --loglevel 0;sleep 4
+ifconfig tun0 10.0.0.1 netmask 255.255.255.0
+echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Routing host SSH, IP Gateway dan dns..";sleep 1
+echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Menggunakan \e[35;1m$ifaces\e[0m sebagai Pusat sumber."
+route add default gw 10.0.0.2 metric 0;sleep 1
 update
 }
  cf () {
