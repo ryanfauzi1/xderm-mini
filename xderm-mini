@@ -122,6 +122,11 @@ echo -e "\e[36;1m##############################################\e[0m"
 echo -e "      \e[35;1mXderm Mini SSL (ssh & vmess) 2021\e[0m\n\e[36;1m##############################################\e[0m\n"
 }
  routing () {
+  if [ $mode -eq 0 ]; then
+  host=$(grep host= /root/config.txt|awk -F "=" '{print $2}')
+  else
+  host=$(grep vmess: /root/config.txt|awk -F "//" '{print $2}'|base64 -d|grep '"add":'|awk -F ': "' '{print $2}'|awk -F '"' '{print $1}')
+  fi
  ifaces=$(ip r|grep default|awk '{print $3}')
  if [ ! -f $(echo $ifaces|awk -F "." '{print $2}') ]; then
    if [ $(echo $ifaces|awk -F "." '{print $4}'|wc -c) != "2" ]; then
