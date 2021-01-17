@@ -165,8 +165,9 @@ echo -e "\e[31;1m Setup Selesai.\e[0m\n"
 }
  update () {
  url="https://raw.githubusercontent.com/ryanfauzi1/xderm-mini/main"
- echo -ne "\e[33;1m{$(date +%M:%S)}\e[0m Checking for update...";sleep 5
- v=$(curl -m30 $url/xderm-mini -s|grep "Current versi"|awk "NR==2"|awk '{print $6}')
+ echo -ne "\e[33;1m{$(date +%M:%S)}\e[0m Checking for update..."
+ sleep 4
+ v=$(curl -m20 $url/xderm-mini -s|grep "Current versi"|awk "NR==2"|awk '{print $6}')
  if [ ! -f $v ]; then
   if [ "$v" != "6.6" ]; then
  echo -e "\e[36;3m (Memperbarui..)\e[0m";sleep 1
@@ -346,12 +347,12 @@ pass=$(grep pass= /root/config.txt|awk -F "=" '{print $2}')
 flush;killall -q timeout;ifaces=$(ip r|grep default|awk '{print $3}');routing
 echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Mode yang dipilih: \e[32;1m$mode\e[0m"
 echo "#!/bin/bash
-sleep 15;killall -q openssl" > /tmp/timeout;screen -dmS cb bash /tmp/timeout
+sleep 12;killall -q openssl" > /tmp/timeout;screen -dmS cb bash /tmp/timeout
 echo -ne "\e[33;1m{$(date +%M:%S)}\e[0m Menguji bug SNI... "
  if [ -f $(echo "exit"|openssl 2>/dev/null) ]; then
 echo -e "\n -\e[31;1mtidak ada paket openssl, install dulu!\e[0m \n";exit
  fi
-supp=$(echo "QUIT"|openssl s_client -connect www.smadav.net:443 -servername $sni 2>/dev/null|grep supp|awk '{print $4}')
+sleep 2;supp=$(echo "QUIT"|openssl s_client -connect www.smadav.net:443 -servername $sni 2>/dev/null|grep supp|awk '{print $4}')
  if [ ! -f $supp ]; then
 echo -e "\e[32;1mOK\e[0m"
 else
@@ -398,7 +399,7 @@ pudp=$(grep pudp /root/config.txt|awk -F "=" '{print $2}')
 screen -dmS gerbang badvpn-tun2socks --tundev tun0 --netif-ipaddr 10.0.0.2 --netif-netmask 255.255.255.0 --socks-server-addr 127.0.0.1:1080$ssa --udpgw-remote-server-addr 127.0.0.1:$pudp --udpgw-transparent-dns --loglevel 0;sleep 4
 ifconfig tun0 10.0.0.1 netmask 255.255.255.0
 echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Menggunakan \e[35;1m$ifaces\e[0m sebagai Pusat sumber.";sleep 1
-echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Routing host SSH, IP Gateway dan dns..";sleep 1
+echo -e "\e[33;1m{$(date +%M:%S)}\e[0m Routing Host, IP Gateway dan dns..";sleep 1
 route add default gw 10.0.0.2 metric 0;sleep 1
 update
 }
