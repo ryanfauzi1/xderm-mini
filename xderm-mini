@@ -189,6 +189,7 @@ if [ $(grep mode= /root/config.txt|awk -F "=" '{print $2}') -eq 1 ]; then
  echo -e "Paket V2Ray belom terinstall. install dulu!\n";exit
  fi
  ssa=8;pudp=$(grep pudp= /root/config.txt|awk -F "=" '{print $2}')
+sni=$(grep vmess: /root/config.txt|awk -F "//" '{print $2}'|base64 -d|grep '"host":'|awk -F ': "' '{print $2}'|awk -F '"' '{print $1}')
 uuid=$(grep vmess: /root/config.txt|awk -F "//" '{print $2}'|base64 -d|grep '"id":'|awk -F ': "' '{print $2}'|awk -F '"' '{print $1}')
 host=$(grep vmess: /root/config.txt|awk -F "//" '{print $2}'|base64 -d|grep '"add":'|awk -F ': "' '{print $2}'|awk -F '"' '{print $1}')
 port=$(grep vmess: /root/config.txt|awk -F "//" '{print $2}'|base64 -d|grep '"port":'|awk -F ': "' '{print $2}'|awk -F '"' '{print $1}')
