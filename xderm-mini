@@ -225,7 +225,6 @@ uuid=$(grep vmess: /root/config.txt 2>/dev/null|awk -F "//" '{print $2}'|base64 
 host=$(grep vmess: /root/config.txt 2>/dev/null|awk -F "//" '{print $2}'|base64 -d|awk -F '"add' '{print $2}'|awk -F ',' '{print $1}'|sed -e 's/://g' -e 's/ //g' -e 's/"//g')
 aid=$(grep vmess: /root/config.txt 2>/dev/null|awk -F "//" '{print $2}'|base64 -d|awk -F '"aid' '{print $2}'|awk -F ',' '{print $1}'|sed -e 's/://g' -e 's/ //g' -e 's/"//g')
 net=$(grep vmess: /root/config.txt 2>/dev/null|awk -F "//" '{print $2}'|base64 -d|awk -F '"net' '{print $2}'|awk -F ',' '{print $1}'|sed -e 's/://g' -e 's/ //g' -e 's/"//g')
-tls=$(grep vmess: /root/config.txt 2>/dev/null|awk -F "//" '{print $2}'|base64 -d|awk -F '"tls' '{print $2}'|awk -F ',' '{print $1}'|sed -e 's/://g' -e 's/ //g' -e 's/"//g')
 path=$(grep vmess: /root/config.txt 2>/dev/null|awk -F "//" '{print $2}'|base64 -d|awk -F '"path' '{print $2}'|awk -F ',' '{print $1}'|sed -e 's/://g' -e 's/ //g' -e 's/"//g')
  echo "##############################################"
 echo -e "  Host: $host\n  Port: $port\n  ID: $uuid\n  Net: $net\n  Path: $path\n  Port UDPgw: $pudp\n##############################################"
@@ -283,7 +282,7 @@ echo "{
       },
       \"streamSettings\": {
         \"network\": \"$net\",
-        \"security\": \"$tls\",
+        \"security\": \"tls\",
         \"tlsSettings\": {
           \"allowInsecure\": true,
           \"serverName\": \"$sni\"
