@@ -1,5 +1,6 @@
      - Changelog:
      - fix not connect and route metric
+     - fix support all format config vmess
      - notif ini tampil jika update sukses
-     - UPDATED xderm versi 7.0
+     - UPDATED xderm versi 7.1
      - kritik & saran (WA 083862963507)
