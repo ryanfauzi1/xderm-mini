@@ -220,7 +220,6 @@ if [ $mode -eq 1 ]; then
     if [ -f $port ]; then
  echo -e "Akun vmess belom disetting!\n";exit
     fi
-fi
 mkdir -p /usr/local/etc/v2ray/
 uuid=$(grep vmess: /root/config.txt 2>/dev/null|awk -F "//" '{print $2}'|base64 -d|awk -F '"id' '{print $2}'|awk -F ',' '{print $1}'|sed -e 's/://g' -e 's/ //g' -e 's/"//g')
 host=$(grep vmess: /root/config.txt 2>/dev/null|awk -F "//" '{print $2}'|base64 -d|awk -F '"add' '{print $2}'|awk -F ',' '{print $1}'|sed -e 's/://g' -e 's/ //g' -e 's/"//g')
