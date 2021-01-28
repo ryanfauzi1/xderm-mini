@@ -384,7 +384,7 @@ r=$(curl -m4 google.com -w "%{http_code}\n" --proxy socks://127.0.0.1:1080 -s -o
   if [ $r -eq 301 ]; then
   echo -e "\e[32;1mHTTP/1.1 200 OK\e[0m";rm -rf screenlog.0;break
   fi
-   if [ $n -eq 17 ]; then
+   if [ $n -eq 16 ]; then
     echo -e "\e[31;1mNot Connect!\e[0m"
      if [ ! -f $(grep Permission screenlog.0|awk '{print $4}') ]; then
      echo -e "\e[33;1m{$(date +%M:%S)}\e[0m \e[36;3mUsername/Password Salah/Kadaluarsa.\e[0m"
