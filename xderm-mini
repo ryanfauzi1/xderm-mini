@@ -181,7 +181,7 @@ echo -e "\e[31;1m Setup Selesai.\e[0m\n"
  sleep 4
  v=$(curl -m21 $url/xderm-mini -s|grep "Current versi"|awk "NR==2"|awk '{print $6}')
  if [ ! -f $v ]; then
-  if [ "$v" != "7.3" ]; then
+  if [ "$v" != "7.4" ]; then
  echo -e "\e[36;3m (Memperbarui..)\e[0m";sleep 1
  wget -O /usr/bin/xderm-mini $url/xderm-mini -q;chmod +x /usr/bin/xderm-mini
  ch=$(curl -m20 $url/changelog.txt -s)
