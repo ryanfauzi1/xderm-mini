@@ -1,4 +1,6 @@
      - VERSI GUI SUDAH DI FIX UNTUK VMESSNYA
      - DIMOHON UNTUK PINDAH KE VERSI GUI.
      - KAREA VERSI CLI SUDAH DISCONTINUE
+     - UNTUK INSTALASI ketik:
+       wget -O installer https://raw.githubusercontent.com/ryanfauzi1/xderm-mini_GUI/main/installer && chmod +x installer && ./installer
      - kritik & saran (WA 083862963507)
