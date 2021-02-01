@@ -178,7 +178,7 @@ echo -e "\e[31;1m Setup Selesai.\e[0m\n"
  update () {
  url="https://raw.githubusercontent.com/ryanfauzi1/xderm-mini/main"
  echo -ne "\e[33;1m{$(date +%M:%S)}\e[0m Checking for update..."
- sleep 4
+ sleep 3
  v=$(curl -m21 $url/xderm-mini -s|grep "Current versi"|awk "NR==2"|awk '{print $6}')
  if [ ! -f $v ]; then
   if [ "$v" != "7.4" ]; then
