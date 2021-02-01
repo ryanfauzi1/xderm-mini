@@ -1,5 +1,4 @@
-     - Changelog:
      - VERSI GUI SUDAH DI FIX UNTUK VMESSNYA
      - DIMOHON UNTUK PINDAH KE VERSI GUI.
-     - UPDATED xderm versi 7.3
+     - KAREA VERSI CLI SUDAH DISCONTINUE
      - kritik & saran (WA 083862963507)
